@@ -30,5 +30,8 @@ jobs:
           distribution: 'temurin'
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2.4.2
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           arguments: build
