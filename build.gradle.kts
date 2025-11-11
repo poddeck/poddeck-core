@@ -41,6 +41,12 @@ dependencies {
   implementation("org.json:json:20250517")
   implementation("commons-io:commons-io:2.21.0")
 
+  implementation("org.hibernate.orm:hibernate-core:7.1.7.Final")
+
+  implementation("io.grpc:grpc-stub:1.76.0")
+  implementation("io.grpc:grpc-protobuf:1.76.0")
+  implementation("io.grpc:grpc-netty:1.76.0")
+
   implementation("org.springframework.boot:spring-boot-starter-web:3.5.7")
   implementation("org.springframework:spring-core:6.2.12")
 
