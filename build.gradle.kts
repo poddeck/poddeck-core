@@ -4,7 +4,7 @@ import java.util.zip.GZIPInputStream
 
 plugins {
   id("java")
-  id("org.springframework.boot") version "3.5.7"
+  id("org.springframework.boot") version "4.0.0-M3"
   id("io.freefair.lombok") version "9.1.0"
 }
 
@@ -38,17 +38,20 @@ dependencies {
   testImplementation("org.projectlombok:lombok:1.18.42")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
-  implementation("org.json:json:20250517")
-  implementation("commons-io:commons-io:2.21.0")
+  implementation("org.apache.commons:commons-configuration2:2.12.0")
+  implementation("commons-beanutils:commons-beanutils:1.11.0")
 
+  implementation("org.postgresql:postgresql:42.7.8")
   implementation("org.hibernate.orm:hibernate-core:7.1.7.Final")
+  implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.grpc:grpc-stub:1.76.0")
   implementation("io.grpc:grpc-protobuf:1.76.0")
   implementation("io.grpc:grpc-netty:1.76.0")
 
-  implementation("org.springframework.boot:spring-boot-starter-web:3.5.7")
-  implementation("org.springframework:spring-core:6.2.12")
+  implementation("org.springframework.boot:spring-boot-starter-web:4.0.0-M3")
+  implementation("org.springframework:spring-core:7.0.0-M9")
+  implementation("org.springframework.data:spring-data-jpa:4.0.0-M6")
 
   implementation("de.mkammerer:argon2-jvm:2.12")
 
