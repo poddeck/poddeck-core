@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import io.poddeck.common.configuration.ConfigurationInjectionModule;
 import io.poddeck.common.log.Log;
+import io.poddeck.core.communication.CommunicationInjectionModule;
 import io.poddeck.core.database.DatabaseInjectionModule;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class CoreInjectionModule extends AbstractModule {
   protected void configure() {
     install(ConfigurationInjectionModule.create());
     install(DatabaseInjectionModule.create());
+    install(CommunicationInjectionModule.create());
   }
 
   @Provides
