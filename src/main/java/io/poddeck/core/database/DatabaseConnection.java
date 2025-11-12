@@ -53,10 +53,16 @@ public final class DatabaseConnection {
   }
 
   public Session openSession() throws HibernateException {
+    if (sessionFactory == null) {
+      throw new HibernateException("Database not configured");
+    }
     return sessionFactory.openSession();
   }
 
   public void shutdown() throws HibernateException {
+    if (sessionFactory == null) {
+      throw new HibernateException("Database not configured");
+    }
     sessionFactory.close();
   }
 }
