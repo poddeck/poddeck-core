@@ -13,14 +13,19 @@ import java.util.concurrent.CompletableFuture;
 public interface DatabaseRepository<T, ID extends Serializable> extends Repository<T, ID> {
   @Async
   CompletableFuture<Optional<T>> findById(ID id);
+
   @Async
   CompletableFuture<Boolean> existsById(ID id);
+
   @Async
   CompletableFuture<List<T>> findAll();
+
   @Async
   CompletableFuture<Void> save(T entity);
+
   @Async
   CompletableFuture<Void> deleteById(ID id);
+
   @Async
   CompletableFuture<Void> delete(T entity);
 }
