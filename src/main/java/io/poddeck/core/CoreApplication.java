@@ -5,6 +5,7 @@ import io.poddeck.common.log.Log;
 import io.poddeck.core.application.ApplicationLaunchEvent;
 import io.poddeck.core.application.ApplicationPostRunEvent;
 import io.poddeck.core.application.ApplicationPreRunEvent;
+import io.poddeck.core.communication.CommunicationServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -33,6 +34,11 @@ public class CoreApplication {
         eventExecutor.execute(ApplicationPreRunEvent.create());
         log.info("Booting Spring...");
         var applicationContext = application.run(args);
+        log.info("Spring successfully booted");
+        log.info("Starting communication server...");
+        var communicationServer = applicationContext.getBean(CommunicationServer.class);
+        communicationServer.start();
+        log.info("Communication server successfully started");
         log.info("Successfully booted PodDeck - Core");
         eventExecutor.execute(ApplicationPostRunEvent.create());
       } catch (Exception exception) {

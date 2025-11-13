@@ -14,15 +14,10 @@ public final class CommunicationServer {
   private final CommunicationConfiguration configuration;
   private Server server;
 
-  public void startAsync() {
-    new Thread(this::start).start();
-  }
-
   public void start() {
     try {
       server = ServerBuilder.forPort(configuration.port())
         .addService(HandshakeService.create()).build().start();
-      server.awaitTermination();
     } catch (Exception exception) {
       log.processError(exception);
     }
