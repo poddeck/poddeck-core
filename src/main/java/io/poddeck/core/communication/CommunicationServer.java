@@ -1,15 +1,14 @@
 package io.poddeck.core.communication;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.poddeck.common.log.Log;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
-@Singleton
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
+@Component
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CommunicationServer {
   private final Log log;
   private final CommunicationConfiguration configuration;
