@@ -1,4 +1,4 @@
-package io.poddeck.core.user.session;
+package io.poddeck.core.member;
 
 import io.poddeck.core.database.DatabaseRepository;
 import org.springframework.stereotype.Repository;
@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface UserSessionRepository extends DatabaseRepository<UserSession, UUID> {
+public interface MemberRepository extends DatabaseRepository<Member, UUID> {
 }
