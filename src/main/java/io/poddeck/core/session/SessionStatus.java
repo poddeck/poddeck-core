@@ -1,6 +1,6 @@
-package io.poddeck.core.user.session;
+package io.poddeck.core.session;
 
-public enum UserSessionStatus {
+public enum SessionStatus {
   ACTIVE,
   CLOSED;
 

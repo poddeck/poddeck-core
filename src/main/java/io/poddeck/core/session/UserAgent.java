@@ -1,4 +1,4 @@
-package io.poddeck.core.user.session;
+package io.poddeck.core.session;
 
 import lombok.RequiredArgsConstructor;
 

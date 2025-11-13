@@ -1,26 +1,29 @@
-package io.poddeck.core.user.session;
+package io.poddeck.core.session;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_session")
+@Table(name = "member_session")
 @Getter
 @Accessors(fluent = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(staticName = "create")
-public final class UserSession {
+public final class Session {
   @Id
   @Column(name = "id", nullable = false, updatable = false)
   private UUID id;
-  @Column(name = "user", nullable = false)
-  private UUID userId;
+  @Column(name = "member", nullable = false)
+  private UUID memberId;
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
-  private UserSessionStatus status;
+  private SessionStatus status;
   @Column(name = "device_platform")
   private String devicePlatform;
   @Column(name = "ip_address")
@@ -37,7 +40,7 @@ public final class UserSession {
   private long lastRefresh;
 
   public void close() {
-    this.status = UserSessionStatus.CLOSED;
+    this.status = SessionStatus.CLOSED;
   }
 
   public void updateRefreshToken(String refreshToken) {
