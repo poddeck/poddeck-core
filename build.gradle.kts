@@ -29,8 +29,6 @@ dependencies {
   testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
 
-  implementation("com.google.inject:guice:7.0.0")
-
   implementation("com.google.guava:guava:33.5.0-jre")
 
   implementation("org.projectlombok:lombok:1.18.42")
@@ -52,6 +50,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web:4.0.0-M3")
   implementation("org.springframework:spring-core:7.0.0-M9")
   implementation("org.springframework.data:spring-data-jpa:4.0.0-M6")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.0-M3")
+  implementation("com.h2database:h2:2.4.240")
 
   implementation("de.mkammerer:argon2-jvm:2.12")
 
