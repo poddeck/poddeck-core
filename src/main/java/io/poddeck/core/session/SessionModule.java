@@ -10,8 +10,7 @@ import java.io.File;
 public class SessionModule {
   @Bean
   DatabaseReader geoDatabaseReader() throws Exception {
-    var database = new File(System.getProperty("member.dir") +
-      "/geo/GeoLite2-City.mmdb");
+    var database = new File("geo/GeoLite2-City.mmdb");
     return new DatabaseReader.Builder(database).build();
   }
 }
