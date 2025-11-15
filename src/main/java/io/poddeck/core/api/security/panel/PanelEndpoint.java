@@ -1,4 +1,4 @@
-package io.poddeck.core.access.security.panel;
+package io.poddeck.core.api.security.panel;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package io.poddeck.core.access.version;
+package io.poddeck.core.api.version;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -1,4 +1,4 @@
-package io.poddeck.core.access.security;
+package io.poddeck.core.api.security;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

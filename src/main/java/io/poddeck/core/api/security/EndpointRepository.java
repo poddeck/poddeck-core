@@ -1,4 +1,4 @@
-package io.poddeck.core.access.security;
+package io.poddeck.core.api.security;
 
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;

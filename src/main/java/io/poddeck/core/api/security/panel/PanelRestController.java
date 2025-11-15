@@ -1,4 +1,4 @@
-package io.poddeck.core.access.security.panel;
+package io.poddeck.core.api.security.panel;
 
 import io.jsonwebtoken.Jwts;
 import io.poddeck.core.member.Member;

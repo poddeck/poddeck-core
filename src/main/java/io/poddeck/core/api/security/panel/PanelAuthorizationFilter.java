@@ -1,10 +1,10 @@
-package io.poddeck.core.access.security.panel;
+package io.poddeck.core.api.security.panel;
 
 import com.google.common.collect.Lists;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.poddeck.core.access.security.Endpoint;
-import io.poddeck.core.access.security.EndpointRepository;
+import io.poddeck.core.api.security.Endpoint;
+import io.poddeck.core.api.security.EndpointRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,7 +19,7 @@ import java.security.Key;
 import java.util.List;
 
 @Component
-public class PanelAuthorizationFilter extends OncePerRequestFilter {
+public final class PanelAuthorizationFilter extends OncePerRequestFilter {
   private final Key panelKey;
   private final EndpointRepository endpointRepository;
   private List<String> targetEndpoints = Lists.newArrayList();
