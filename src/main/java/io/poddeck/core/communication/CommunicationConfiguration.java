@@ -9,7 +9,7 @@ import org.apache.commons.configuration2.AbstractConfiguration;
 @Getter
 @Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "create")
-public class CommunicationConfiguration implements Configuration {
+public final class CommunicationConfiguration implements Configuration {
   private int port;
 
   @Override

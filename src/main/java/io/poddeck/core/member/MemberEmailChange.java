@@ -18,7 +18,7 @@ import java.util.UUID;
 @Accessors(fluent = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(staticName = "create")
-public class MemberEmailChange {
+public final class MemberEmailChange {
   @Id
   @Column(name = "member", nullable = false, unique = true)
   private UUID member;

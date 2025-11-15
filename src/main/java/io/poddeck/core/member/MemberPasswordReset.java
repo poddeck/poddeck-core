@@ -18,7 +18,7 @@ import java.util.UUID;
 @Accessors(fluent = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(staticName = "create")
-public class MemberPasswordReset {
+public final class MemberPasswordReset {
   @Id
   @Column(name = "member", nullable = false, updatable = false)
   private UUID memberId;

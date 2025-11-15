@@ -9,7 +9,7 @@ import org.apache.commons.configuration2.AbstractConfiguration;
 @Getter
 @Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "create")
-public class DatabaseConfiguration implements Configuration {
+public final class DatabaseConfiguration implements Configuration {
   private String hostname;
   private int port;
   private String username;
