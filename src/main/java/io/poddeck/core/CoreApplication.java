@@ -2,6 +2,7 @@ package io.poddeck.core;
 
 import io.poddeck.common.event.EventExecutor;
 import io.poddeck.common.log.Log;
+import io.poddeck.core.api.ApiConfiguration;
 import io.poddeck.core.application.ApplicationLaunchEvent;
 import io.poddeck.core.application.ApplicationPostRunEvent;
 import io.poddeck.core.application.ApplicationPreRunEvent;
@@ -29,8 +30,9 @@ public class CoreApplication {
         var eventExecutor = coreContext.getBean(EventExecutor.class);
         eventExecutor.execute(ApplicationLaunchEvent.create());
         var application = new SpringApplication(CoreApplication.class);
+        var apiConfiguration = coreContext.getBean(ApiConfiguration.class);
         application.setDefaultProperties(Collections.singletonMap("server.port",
-          8080));
+          apiConfiguration.port()));
         eventExecutor.execute(ApplicationPreRunEvent.create());
         log.info("Booting Spring...");
         var applicationContext = application.run(args);
