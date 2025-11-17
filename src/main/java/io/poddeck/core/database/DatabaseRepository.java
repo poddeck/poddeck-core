@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 
 @NoRepositoryBean
@@ -28,4 +29,17 @@ public interface DatabaseRepository<T, ID extends Serializable> extends Reposito
 
   @Async
   CompletableFuture<Void> delete(T entity);
+
+  default CompletableFuture<ID> generateAvailableId(Callable<ID> generator) {
+    try {
+      var futureResponse = new CompletableFuture<ID>();
+      var id = generator.call();
+      existsById(id).thenApply(exists -> exists ?
+        generateAvailableId(generator).thenApply(futureResponse::complete) :
+        CompletableFuture.completedFuture(futureResponse.complete(id)));
+      return futureResponse;
+    } catch (Exception exception) {
+      return CompletableFuture.completedFuture(null);
+    }
+  }
 }
