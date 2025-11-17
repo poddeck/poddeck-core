@@ -30,8 +30,8 @@ public final class Member {
   private String passwordHash;
   @Column(name = "language")
   private String language;
-  @Column(name = "join", nullable = false)
-  private long join;
+  @Column(name = "joined_at", nullable = false)
+  private long joinedAt;
 
   public void changeName(String newName) {
     this.name = newName;
