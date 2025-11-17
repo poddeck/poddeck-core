@@ -57,7 +57,7 @@ public final class AuthenticationLoginController extends PanelRestController {
   ) {
     var body = ApiRequestBody.of(payload, response);
     var loginFuture = login(request, body.getString("email").trim(),
-      body.getString("password"), body.getString("multiFactorCode"));
+      body.getString("password"), body.getString("multi_factor_code"));
     loginFuture.thenAccept(result -> applyLoginResponseStatus(response, result));
     return loginFuture;
   }
@@ -130,7 +130,7 @@ public final class AuthenticationLoginController extends PanelRestController {
       authentication.generateRefreshToken(member.id(), sessionId);
     storeSession(request, member.id(), sessionId, refreshToken);
     futureResponse.complete(Map.of("success", true,
-      "authenticationToken", authenticationToken, "refreshToken", refreshToken));
+      "authentication_token", authenticationToken, "refresh_token", refreshToken));
   }
 
   public void storeSession(
@@ -159,10 +159,10 @@ public final class AuthenticationLoginController extends PanelRestController {
     @RequestBody String payload, HttpServletResponse response
   ) {
     var body = ApiRequestBody.of(payload, response);
-    var refreshToken = body.getString("refreshToken");
+    var refreshToken = body.getString("refresh_token");
     var result = verifyToken(refreshKey, refreshToken);
     if (result.getKey() != HttpServletResponse.SC_ACCEPTED) {
-      return CompletableFuture.completedFuture(Map.of("success", "false"));
+      return CompletableFuture.completedFuture(Map.of("success", false));
     }
     var memberId = UUID.fromString(result.getValue().get("id", String.class));
     var sessionId = UUID.fromString(result.getValue().get("session", String.class));
@@ -177,7 +177,7 @@ public final class AuthenticationLoginController extends PanelRestController {
     boolean sessionExists
   ) {
     if (!memberExists || !sessionExists) {
-      return CompletableFuture.completedFuture(Map.of("success", "false"));
+      return CompletableFuture.completedFuture(Map.of("success", false));
     }
     return memberRepository().findById(memberId)
       .thenCompose(member -> sessionRepository.findById(sessionId)
@@ -191,7 +191,7 @@ public final class AuthenticationLoginController extends PanelRestController {
     if (session.status().isClosed() ||
       !session.lastRefreshToken().equals(refreshToken)
     ) {
-      return Map.of("success", "false");
+      return Map.of("success", false);
     }
     var newAuthenticationToken =
       authentication.generateAuthenticationToken(member.id(), session.id());
@@ -199,8 +199,8 @@ public final class AuthenticationLoginController extends PanelRestController {
       authentication.generateRefreshToken(member.id(), session.id());
     session.updateRefreshToken(newRefreshToken);
     sessionRepository.save(session);
-    return Map.of("success", "true", "authenticationToken", newAuthenticationToken,
-      "refreshToken", newRefreshToken);
+    return Map.of("success", true, "authentication_token", newAuthenticationToken,
+      "refresh_token", newRefreshToken);
   }
 
   @PanelEndpoint
