@@ -19,9 +19,15 @@ public class ApiModule {
     return configuration;
   }
 
-  @Bean("panelKey")
-  Key panelKey(@Qualifier("apiConfiguration") ApiConfiguration configuration) {
-    return new SecretKeySpec(configuration.panelKey()
+  @Bean("authenticationKey")
+  Key authenticationKey(@Qualifier("apiConfiguration") ApiConfiguration configuration) {
+    return new SecretKeySpec(configuration.authenticationKey()
+      .getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
+  }
+
+  @Bean("refreshKey")
+  Key refreshKey(@Qualifier("apiConfiguration") ApiConfiguration configuration) {
+    return new SecretKeySpec(configuration.refreshKey()
       .getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
   }
 }

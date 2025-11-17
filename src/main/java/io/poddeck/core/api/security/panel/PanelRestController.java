@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @Accessors(fluent = true)
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class PanelRestController {
-  private final Key secretKey;
+  private final Key authenticationKey;
   private final MemberRepository memberRepository;
 
   /**
@@ -36,7 +36,7 @@ public class PanelRestController {
    * @return The id of the member
    */
   protected UUID findMemberId(String apiKey) {
-    return UUID.fromString(Jwts.parser().setSigningKey(secretKey).build()
+    return UUID.fromString(Jwts.parser().setSigningKey(authenticationKey).build()
       .parseClaimsJws(apiKey).getPayload().get("id", String.class));
   }
 
@@ -55,7 +55,7 @@ public class PanelRestController {
    * @return The id of the session
    */
   protected UUID findSessionId(String apiKey) {
-    return UUID.fromString(Jwts.parser().setSigningKey(secretKey).build()
+    return UUID.fromString(Jwts.parser().setSigningKey(authenticationKey).build()
       .parseClaimsJws(apiKey).getPayload().get("session", String.class));
   }
 
@@ -87,7 +87,7 @@ public class PanelRestController {
   protected boolean isValidApiKey(String apiKey) {
     try {
       Jwts.parser()
-        .setSigningKey(secretKey)
+        .setSigningKey(authenticationKey)
         .build()
         .parseClaimsJws(apiKey);
       return true;

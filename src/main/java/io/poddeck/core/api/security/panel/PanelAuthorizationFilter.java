@@ -20,15 +20,15 @@ import java.util.List;
 
 @Component
 public final class PanelAuthorizationFilter extends OncePerRequestFilter {
-  private final Key panelKey;
+  private final Key authenticationKey;
   private final EndpointRepository endpointRepository;
   private List<String> targetEndpoints = Lists.newArrayList();
 
   private PanelAuthorizationFilter(
-    @Qualifier("panelKey") Key panelKey,
+    @Qualifier("authenticationKey") Key authenticationKey,
     EndpointRepository endpointRepository
   ) {
-    this.panelKey = panelKey;
+    this.authenticationKey = authenticationKey;
     this.endpointRepository = endpointRepository;
   }
 
@@ -60,7 +60,7 @@ public final class PanelAuthorizationFilter extends OncePerRequestFilter {
   private int validateApiKey(String apiKey) {
     try {
       Jwts.parser()
-        .setSigningKey(panelKey)
+        .setSigningKey(authenticationKey)
         .build()
         .parseClaimsJws(apiKey);
       return HttpServletResponse.SC_ACCEPTED;
