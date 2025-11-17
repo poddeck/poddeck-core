@@ -30,12 +30,8 @@ public final class Member {
   private String passwordHash;
   @Column(name = "language")
   private String language;
-  @Column(name = "compliant", nullable = false)
-  private boolean compliant;
-  @Column(name = "newsletter", nullable = false)
-  private boolean newsletter;
-  @Column(name = "accession", nullable = false)
-  private long accession;
+  @Column(name = "join", nullable = false)
+  private long join;
 
   public void changeName(String newName) {
     this.name = newName;
@@ -54,6 +50,6 @@ public final class Member {
   }
 
   public static Member unknown(UUID id) {
-    return create(id, "Unknown", "Unknown", "", "", true, true, -1);
+    return create(id, "Unknown", "Unknown", "", "", -1);
   }
 }
