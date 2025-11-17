@@ -36,6 +36,8 @@ dependencies {
   testImplementation("org.projectlombok:lombok:1.18.42")
   testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 
+  implementation("org.json:json:20250517")
+
   implementation("org.apache.commons:commons-configuration2:2.12.0")
   implementation("commons-beanutils:commons-beanutils:1.11.0")
 
@@ -65,9 +67,9 @@ dependencies {
     exclude(group = "commons-logging", module = "commons-logging")
   }
 
-  implementation("com.google.auth:google-auth-library-oauth2-http:1.40.0")
-
   implementation("io.poddeck:common:1.0.0-SNAPSHOT")
+
+  implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20240325.1")
 }
 
 tasks.test {

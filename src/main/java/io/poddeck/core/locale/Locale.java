@@ -1,11 +1,10 @@
 package io.poddeck.core.locale;
 
 import com.google.common.collect.Maps;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 
 import java.nio.charset.StandardCharsets;
@@ -30,13 +29,13 @@ public final class Locale {
     var resource = new ClassPathResource(String.format(LOCALE_PATH, language));
     try (var inputStream = resource.getInputStream()) {
       var json = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-      deserialize(JsonParser.parseString(json).getAsJsonObject());
+      deserialize(new JSONObject(json));
     }
   }
 
-  private void deserialize(JsonObject json) {
+  private void deserialize(JSONObject json) {
     for (var key : json.keySet()) {
-      locale.put(key, json.get(key).getAsString());
+      locale.put(key, json.getString(key));
     }
   }
 
