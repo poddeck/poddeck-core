@@ -3,7 +3,7 @@ package io.poddeck.core;
 import io.poddeck.common.event.EventExecutor;
 import io.poddeck.common.event.HookRegistry;
 import io.poddeck.common.log.Log;
-import io.poddeck.core.api.ApiConfiguration;
+import io.poddeck.core.api.ApiModule;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Import;
 import java.io.File;
 
 @Configuration
-@Import(ApiConfiguration.class)
+@Import(ApiModule.class)
 public class CoreModule {
   @Bean
   Log coreLog() throws Exception {
