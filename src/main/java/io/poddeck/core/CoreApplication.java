@@ -7,11 +7,15 @@ import io.poddeck.core.application.ApplicationLaunchEvent;
 import io.poddeck.core.application.ApplicationPostRunEvent;
 import io.poddeck.core.application.ApplicationPreRunEvent;
 import io.poddeck.core.communication.CommunicationServer;
+import io.poddeck.core.hashing.Hashing;
+import io.poddeck.core.member.Member;
+import io.poddeck.core.member.MemberRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Collections;
+import java.util.UUID;
 
 @SpringBootApplication(scanBasePackages = {"io.poddeck.core"})
 public class CoreApplication {
@@ -43,6 +47,10 @@ public class CoreApplication {
         log.info("Communication server successfully started");
         log.info("Successfully booted PodDeck - Core");
         eventExecutor.execute(ApplicationPostRunEvent.create());
+        /*var member = Member.create(UUID.randomUUID(), "Admin", "admin",
+          applicationContext.getBean(Hashing.class).hash("admin"), "en",
+          System.currentTimeMillis());
+        applicationContext.getBean(MemberRepository.class).save(member);*/
       } catch (Exception exception) {
         log.processError(exception);
       }

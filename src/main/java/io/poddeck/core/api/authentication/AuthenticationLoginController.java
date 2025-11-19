@@ -1,11 +1,7 @@
 package io.poddeck.core.api.authentication;
 
 import com.maxmind.geoip2.DatabaseReader;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
 import io.poddeck.core.api.request.ApiRequestBody;
-import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.api.security.panel.PanelRestController;
 import io.poddeck.core.member.Member;
 import io.poddeck.core.member.MemberRepository;
@@ -24,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.InetAddress;
 import java.security.Key;
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
 public final class AuthenticationLoginController extends PanelRestController {
-  private final Key refreshKey;
   private final Authentication authentication;
   private final MultiFactorAuthFactory multiFactorAuthFactory;
   private final SessionRepository sessionRepository;
@@ -37,13 +33,11 @@ public final class AuthenticationLoginController extends PanelRestController {
 
   private AuthenticationLoginController(
     @Qualifier("authenticationKey") Key authenticationKey,
-    @Qualifier("refreshKey") Key refreshKey,
     MemberRepository memberRepository, Authentication authentication,
     MultiFactorAuthFactory multiFactorAuthFactory,
     SessionRepository sessionRepository, DatabaseReader geoDatabaseReader
   ) {
     super(authenticationKey, memberRepository);
-    this.refreshKey = refreshKey;
     this.authentication = authentication;
     this.multiFactorAuthFactory = multiFactorAuthFactory;
     this.sessionRepository = sessionRepository;
@@ -152,106 +146,5 @@ public final class AuthenticationLoginController extends PanelRestController {
       platform, ipAddress, country, city, System.currentTimeMillis(),
       refreshToken, System.currentTimeMillis());
     sessionRepository.save(session);
-  }
-
-  @RequestMapping(path = "/authentication/refresh/", method = RequestMethod.POST)
-  public CompletableFuture<Map<String, Object>> refreshVerification(
-    @RequestBody String payload, HttpServletResponse response
-  ) {
-    var body = ApiRequestBody.of(payload, response);
-    var refreshToken = body.getString("refresh_token");
-    var result = verifyToken(refreshKey, refreshToken);
-    if (result.getKey() != HttpServletResponse.SC_ACCEPTED) {
-      return CompletableFuture.completedFuture(Map.of("success", false));
-    }
-    var memberId = UUID.fromString(result.getValue().get("id", String.class));
-    var sessionId = UUID.fromString(result.getValue().get("session", String.class));
-    return memberRepository().existsById(memberId)
-      .thenCompose(memberExists -> sessionRepository.existsById(sessionId)
-        .thenCompose(sessionExists -> refreshVerification(refreshToken, memberId,
-          sessionId, memberExists, sessionExists)));
-  }
-
-  private CompletableFuture<Map<String, Object>> refreshVerification(
-    String refreshToken, UUID memberId, UUID sessionId, boolean memberExists,
-    boolean sessionExists
-  ) {
-    if (!memberExists || !sessionExists) {
-      return CompletableFuture.completedFuture(Map.of("success", false));
-    }
-    return memberRepository().findById(memberId)
-      .thenCompose(member -> sessionRepository.findById(sessionId)
-        .thenApply(session -> refreshVerification(refreshToken, member.get(),
-          session.get())));
-  }
-
-  private Map<String, Object> refreshVerification(
-    String refreshToken, Member member, Session session
-  ) {
-    if (session.status().isClosed() ||
-      !session.lastRefreshToken().equals(refreshToken)
-    ) {
-      return Map.of("success", false);
-    }
-    var newAuthenticationToken =
-      authentication.generateAuthenticationToken(member.id(), session.id());
-    var newRefreshToken =
-      authentication.generateRefreshToken(member.id(), session.id());
-    session.updateRefreshToken(newRefreshToken);
-    sessionRepository.save(session);
-    return Map.of("success", true, "authentication_token", newAuthenticationToken,
-      "refresh_token", newRefreshToken);
-  }
-
-  @PanelEndpoint
-  @RequestMapping(path = "/authentication/logout/", method = RequestMethod.GET)
-  public void logout(HttpServletRequest request) {
-    sessionRepository.findById(findSessionId(request))
-      .thenAccept(session -> logout(session.get()));
-  }
-
-  private void logout(Session session) {
-    session.close();
-    sessionRepository.save(session);
-  }
-
-  @RequestMapping(path = "/authentication/isValid/", method = RequestMethod.POST)
-  public CompletableFuture<Map<String, Object>> isValid(
-    @RequestBody String payload, HttpServletResponse response
-  ) {
-    return isValid(authenticationKey(), payload, response)
-      .thenApply(result -> Map.of("isValid", result.getKey()));
-  }
-
-  private CompletableFuture<Map.Entry<Boolean, Claims> > isValid(
-    Key key, String payload, HttpServletResponse response
-  ) {
-    var body = ApiRequestBody.of(payload, response);
-    var result = verifyToken(key, body.getString("token"));
-    if (result.getKey() != HttpServletResponse.SC_ACCEPTED) {
-      response.setStatus(result.getKey());
-      return CompletableFuture.completedFuture(
-        new AbstractMap.SimpleEntry<>(false, result.getValue()));
-    }
-    var memberId = UUID.fromString(result.getValue().get("id", String.class));
-    return memberRepository().existsById(memberId)
-      .thenApply(exists -> new AbstractMap.SimpleEntry<>(exists, result.getValue()));
-  }
-
-  private Map.Entry<Integer, Claims> verifyToken(Key key, String token) {
-    try {
-      return new AbstractMap.SimpleEntry(HttpServletResponse.SC_ACCEPTED,
-        Jwts.parser()
-          .setSigningKey(key)
-          .build()
-          .parseClaimsJws(token)
-          .getPayload());
-    } catch (ExpiredJwtException exception) {
-      return new AbstractMap.SimpleEntry(
-        HttpServletResponse.SC_EXPECTATION_FAILED, null);
-    } catch (Exception exception) {
-      return new AbstractMap.SimpleEntry(
-        HttpServletResponse.SC_FORBIDDEN, null);
-    }
   }
 }
