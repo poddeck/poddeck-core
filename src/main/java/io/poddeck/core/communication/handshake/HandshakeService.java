@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.UUID;
 
 @RequiredArgsConstructor(staticName = "create")
-public class HandshakeService {
+public final class HandshakeService {
   private final Log log;
   private final AgentRegistry agentRegistry;
 
