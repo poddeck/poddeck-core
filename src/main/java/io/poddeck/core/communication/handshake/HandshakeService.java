@@ -18,7 +18,7 @@ public final class HandshakeService {
   public void process(
     StreamObserver<TunnelMessage> stream, HandshakeRequest handshakeRequest
   ) {
-    log.info("HANDSHAKE");
+    log.info("Handshaking with cluster " + handshakeRequest.getCluster());
     //TODO: CHECK CLUSTER ID & KEY
     var agent = Agent.create(UUID.fromString(handshakeRequest.getCluster()), stream);
     agentRegistry.register(agent);
