@@ -1,5 +1,6 @@
 package io.poddeck.core;
 
+import io.poddeck.common.MetricReport;
 import io.poddeck.common.event.EventExecutor;
 import io.poddeck.common.log.Log;
 import io.poddeck.core.api.ApiConfiguration;
@@ -7,6 +8,8 @@ import io.poddeck.core.application.ApplicationLaunchEvent;
 import io.poddeck.core.application.ApplicationPostRunEvent;
 import io.poddeck.core.application.ApplicationPreRunEvent;
 import io.poddeck.core.communication.CommunicationServer;
+import io.poddeck.core.communication.metric.MetricService;
+import io.poddeck.core.communication.service.ServiceRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -38,6 +41,9 @@ public class CoreApplication {
         var applicationContext = application.run(args);
         log.info("Spring successfully booted");
         log.info("Starting communication server...");
+        var serviceRepository = applicationContext.getBean(ServiceRepository.class);
+        serviceRepository.register(MetricReport.class,
+          applicationContext.getBean(MetricService.class));
         var communicationServer = applicationContext.getBean(CommunicationServer.class);
         communicationServer.start();
         log.info("Communication server successfully started");
