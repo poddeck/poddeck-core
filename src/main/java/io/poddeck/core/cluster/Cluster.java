@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 import java.util.UUID;
 
 @Entity
-@Table(name = "member")
+@Table(name = "cluster")
 @Getter
 @Accessors(fluent = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
