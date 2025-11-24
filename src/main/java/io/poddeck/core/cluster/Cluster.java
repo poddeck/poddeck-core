@@ -24,10 +24,16 @@ public final class Cluster {
   private UUID id;
   @Column(name = "name", nullable = false)
   private String name;
+  @Column(name = "icon", nullable = false)
+  private String icon;
   @Column(name = "created_at", nullable = false)
   private long createdAt;
 
   public void changeName(String newName) {
     this.name = newName;
+  }
+
+  public void changeIcon(String newIcon) {
+    this.icon = newIcon;
   }
 }

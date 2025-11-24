@@ -34,15 +34,16 @@ public final class ClusterCreateController extends ClusterRestController {
   ) {
     var body = ApiRequestBody.of(payload, response);
     var name = body.getString("name");
+    var icon = body.getString("icon");
     return clusterRepository().generateAvailableId(UUID::randomUUID)
-      .thenCompose(id -> createCluster(id, name));
+      .thenCompose(id -> createCluster(id, name, icon));
   }
 
   private CompletableFuture<Map<String, Object>> createCluster(
-    UUID id, String name
+    UUID id, String name, String icon
   ) {
-    var cluster = Cluster.create(id, name, System.currentTimeMillis());
+    var cluster = Cluster.create(id, name, icon, System.currentTimeMillis());
     return clusterRepository().save(cluster)
-      .thenApply(_ -> Map.of("success", true));
+      .thenApply(_ -> Map.of("success", true, "cluster", cluster.id()));
   }
 }
