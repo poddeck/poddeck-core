@@ -22,7 +22,7 @@ public interface DatabaseRepository<T, ID extends Serializable> extends Reposito
   CompletableFuture<List<T>> findAll();
 
   @Async
-  CompletableFuture<Void> save(T entity);
+  CompletableFuture<T> save(T entity);
 
   @Async
   CompletableFuture<Void> deleteById(ID id);

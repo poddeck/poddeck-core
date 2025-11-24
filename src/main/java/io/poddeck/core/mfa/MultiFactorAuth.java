@@ -23,7 +23,7 @@ public final class MultiFactorAuth {
   private final MemberRepository memberRepository;
   private final UUID memberId;
 
-  public CompletableFuture<Void> setup() {
+  public CompletableFuture<MultiFactorSubmission> setup() {
     return memberMultiFactorSubmissionRepository.save(
       MultiFactorSubmission.create(memberId, generateSecret(),
         generateRecoveryCodes(), false));
