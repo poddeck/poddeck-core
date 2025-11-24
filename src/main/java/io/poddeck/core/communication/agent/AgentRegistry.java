@@ -54,6 +54,25 @@ public final class AgentRegistry {
   }
 
   /**
+   * Is used to check whether an agent by a {@link Cluster} exists
+   * @param cluster The {@link Cluster}
+   * @return Whether the cluster agent exists
+   */
+  public boolean existsByCluster(Cluster cluster) {
+    return existsByCluster(cluster.id());
+  }
+
+  /**
+   * Is used to check whether an agent by the cluster exists
+   * @param cluster The id of the cluster
+   * @return Whether the cluster agent exists
+   */
+  public boolean existsByCluster(UUID cluster) {
+    return agents.stream()
+      .anyMatch(agent -> agent.cluster().equals(cluster));
+  }
+
+  /**
    * Is used to find an agent by tunnel stream
    * @param stream The tunnel stream of the agent
    * @return The agent if it could be found
