@@ -64,7 +64,11 @@ public final class PodListController extends ClusterRestController {
     information.put("ready_containers", pod.getStatus().getStatusesList().stream()
       .filter(PodContainerStatus::getReady).count());
     information.put("status", pod.getStatus().getPhase());
+    information.put("restarts", pod.getStatus().getStatusesList().stream()
+      .mapToLong(PodContainerStatus::getRestartCount).sum());
     information.put("age", pod.getStatus().getAge());
+    information.put("node", pod.getStatus().getNode());
+    information.put("ip", pod.getStatus().getPodIp());
     return information;
   }
 }
