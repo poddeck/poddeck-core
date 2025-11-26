@@ -15,35 +15,42 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Key;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-public final class ClusterCreateController extends ClusterRestController {
-  private ClusterCreateController(
+public final class ClusterEditController extends ClusterRestController {
+  private ClusterEditController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, ClusterRepository clusterRepository
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
   }
 
-  @RequestMapping(path = "/cluster/create/", method = RequestMethod.POST)
-  public CompletableFuture<Map<String, Object>> createCluster(
+  @RequestMapping(path = "/cluster/edit/", method = RequestMethod.POST)
+  public CompletableFuture<Map<String, Object>> editCluster(
     HttpServletRequest request, @RequestBody String payload,
     HttpServletResponse response
   ) {
     var body = ApiRequestBody.of(payload, response);
+    var id = body.getUUID("id");
     var name = body.getSanitizedString("name");
     var icon = body.getString("icon");
-    return clusterRepository().generateAvailableId(UUID::randomUUID)
-      .thenCompose(id -> createCluster(id, name, icon));
+    return clusterRepository().findById(id)
+      .thenCompose(cluster -> editCluster(cluster, name, icon));
   }
 
-  private CompletableFuture<Map<String, Object>> createCluster(
-    UUID id, String name, String icon
+  private CompletableFuture<Map<String, Object>> editCluster(
+    Optional<Cluster> clusterOptional, String name, String icon
   ) {
-    var cluster = Cluster.create(id, name, icon, System.currentTimeMillis());
+    if (clusterOptional.isEmpty()) {
+      return CompletableFuture.completedFuture(Map.of("success", false,
+        "error", 1000));
+    }
+    var cluster = clusterOptional.get();
+    cluster.changeName(name);
+    cluster.changeIcon(icon);
     return clusterRepository().save(cluster)
-      .thenApply(_ -> Map.of("success", true, "cluster", cluster.id()));
+      .thenApply(_ -> Map.of("success", true));
   }
 }

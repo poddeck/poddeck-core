@@ -43,4 +43,7 @@ public interface ClusterMetricRepository extends DatabaseRepository<ClusterMetri
     @Param("end") long end,
     @Param("accuracy") String accuracy
   );
+
+  @Async
+  CompletableFuture<Void> deleteByCluster(UUID cluster);
 }
