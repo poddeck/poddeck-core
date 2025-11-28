@@ -75,6 +75,8 @@ public final class PodListController extends ClusterRestController {
           .filter(status -> status.getName().equals(container.getName()))
           .findFirst().get()))
       .toList());
+    information.put("events", pod.getEventsList().stream()
+      .map(this::assembleEventInformation).toList());
     return information;
   }
 
@@ -87,6 +89,16 @@ public final class PodListController extends ClusterRestController {
     information.put("ready", status.getReady());
     information.put("state", status.getState());
     information.put("restarts", status.getRestartCount());
+    return information;
+  }
+
+  private Map<String, Object> assembleEventInformation(PodEvent event) {
+    var information = Maps.<String, Object>newHashMap();
+    information.put("type", event.getType());
+    information.put("reason", event.getReason());
+    information.put("message", event.getMessage());
+    information.put("timestamp", event.getTimestamp());
+    information.put("source", event.getSource());
     return information;
   }
 }
