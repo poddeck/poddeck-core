@@ -1,10 +1,7 @@
 package io.poddeck.core.api.panel.pod;
 
 import com.google.common.collect.Maps;
-import io.poddeck.common.Pod;
-import io.poddeck.common.PodContainerStatus;
-import io.poddeck.common.PodListRequest;
-import io.poddeck.common.PodListResponse;
+import io.poddeck.common.*;
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
@@ -68,7 +65,28 @@ public final class PodListController extends ClusterRestController {
       .mapToLong(PodContainerStatus::getRestartCount).sum());
     information.put("age", pod.getStatus().getAge());
     information.put("node", pod.getStatus().getNode());
-    information.put("ip", pod.getStatus().getPodIp());
+    information.put("pod_ip", pod.getStatus().getPodIp());
+    information.put("host_ip", pod.getStatus().getHostIp());
+    information.put("labels", pod.getMetadata().getLabelsMap());
+    information.put("annotations", pod.getMetadata().getAnnotationsMap());
+    information.put("containers", pod.getSpec().getContainersList().stream()
+      .map(container -> assembleContainerInformation(container,
+        pod.getStatus().getStatusesList().stream()
+          .filter(status -> status.getName().equals(container.getName()))
+          .findFirst().get()))
+      .toList());
+    return information;
+  }
+
+  private Map<String, Object> assembleContainerInformation(
+    Container container, PodContainerStatus status
+  ) {
+    var information = Maps.<String, Object>newHashMap();
+    information.put("name", container.getName());
+    information.put("image", container.getImage());
+    information.put("ready", status.getReady());
+    information.put("state", status.getState());
+    information.put("restarts", status.getRestartCount());
     return information;
   }
 }
