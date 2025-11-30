@@ -39,6 +39,9 @@ public final class AgentRegistry {
    * @return The agent if it could be found
    */
   public Optional<Agent> findByCluster(Cluster cluster) {
+    if (cluster == null) {
+      return Optional.empty();
+    }
     return findByCluster(cluster.id());
   }
 
@@ -59,6 +62,9 @@ public final class AgentRegistry {
    * @return Whether the cluster agent exists
    */
   public boolean existsByCluster(Cluster cluster) {
+    if (cluster == null) {
+      return false;
+    }
     return existsByCluster(cluster.id());
   }
 
