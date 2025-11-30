@@ -1,10 +1,7 @@
 package io.poddeck.core.api.panel.pod;
 
-import io.poddeck.common.PodDeleteRequest;
-import io.poddeck.common.PodDeleteResponse;
 import io.poddeck.common.PodLogRequest;
 import io.poddeck.common.PodLogResponse;
-import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
@@ -24,7 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-public final class PodLogController extends ClusterRestController {
+public final class PodLogController extends PodRestController {
   private final AgentRegistry agentRegistry;
   private final AgentCommandFactory commandFactory;
 
@@ -49,10 +46,10 @@ public final class PodLogController extends ClusterRestController {
     var sinceSeconds = body.has("since_seconds") ?
       body.getInt("since_seconds") : -1;
     return findCluster(request)
-      .thenCompose(cluster -> deletePod(cluster, namespace, pod, sinceSeconds));
+      .thenCompose(cluster -> findPodLog(cluster, namespace, pod, sinceSeconds));
   }
 
-  public CompletableFuture<Map<String, Object>> deletePod(
+  private CompletableFuture<Map<String, Object>> findPodLog(
     Cluster cluster, String namespace, String pod, int sinceSeconds
   ) {
     var agent = agentRegistry.findByCluster(cluster);

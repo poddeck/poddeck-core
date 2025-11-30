@@ -1,8 +1,7 @@
 package io.poddeck.core.api.panel.pod;
 
-import com.google.common.collect.Maps;
-import io.poddeck.common.*;
-import io.poddeck.core.api.panel.ClusterRestController;
+import io.poddeck.common.PodListRequest;
+import io.poddeck.common.PodListResponse;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-public final class PodListController extends ClusterRestController {
+public final class PodListController extends PodRestController {
   private final AgentRegistry agentRegistry;
   private final AgentCommandFactory commandFactory;
 
@@ -40,7 +39,7 @@ public final class PodListController extends ClusterRestController {
     return findCluster(request).thenCompose(this::findPods);
   }
 
-  public CompletableFuture<Map<String, Object>> findPods(Cluster cluster) {
+  private CompletableFuture<Map<String, Object>> findPods(Cluster cluster) {
     var agent = agentRegistry.findByCluster(cluster);
     if (agent.isEmpty()) {
       return CompletableFuture.completedFuture(Map.of("success", false,
@@ -51,54 +50,5 @@ public final class PodListController extends ClusterRestController {
       .thenApply(podListResponse -> podListResponse.getItemsList().stream()
         .map(this::assemblePodInformation).toList())
       .thenApply(pods -> Map.of("pods", pods));
-  }
-
-  private Map<String, Object> assemblePodInformation(Pod pod) {
-    var information = Maps.<String, Object>newHashMap();
-    information.put("name", pod.getMetadata().getName());
-    information.put("namespace", pod.getMetadata().getNamespace());
-    information.put("total_containers", pod.getSpec().getContainersCount());
-    information.put("ready_containers", pod.getStatus().getStatusesList().stream()
-      .filter(PodContainerStatus::getReady).count());
-    information.put("status", pod.getStatus().getPhase());
-    information.put("restarts", pod.getStatus().getStatusesList().stream()
-      .mapToLong(PodContainerStatus::getRestartCount).sum());
-    information.put("age", pod.getStatus().getAge());
-    information.put("node", pod.getStatus().getNode());
-    information.put("pod_ip", pod.getStatus().getPodIp());
-    information.put("host_ip", pod.getStatus().getHostIp());
-    information.put("labels", pod.getMetadata().getLabelsMap());
-    information.put("annotations", pod.getMetadata().getAnnotationsMap());
-    information.put("containers", pod.getSpec().getContainersList().stream()
-      .map(container -> assembleContainerInformation(container,
-        pod.getStatus().getStatusesList().stream()
-          .filter(status -> status.getName().equals(container.getName()))
-          .findFirst().get()))
-      .toList());
-    information.put("events", pod.getEventsList().stream()
-      .map(this::assembleEventInformation).toList());
-    return information;
-  }
-
-  private Map<String, Object> assembleContainerInformation(
-    Container container, PodContainerStatus status
-  ) {
-    var information = Maps.<String, Object>newHashMap();
-    information.put("name", container.getName());
-    information.put("image", container.getImage());
-    information.put("ready", status.getReady());
-    information.put("state", status.getState());
-    information.put("restarts", status.getRestartCount());
-    return information;
-  }
-
-  private Map<String, Object> assembleEventInformation(PodEvent event) {
-    var information = Maps.<String, Object>newHashMap();
-    information.put("type", event.getType());
-    information.put("reason", event.getReason());
-    information.put("message", event.getMessage());
-    information.put("timestamp", event.getTimestamp());
-    information.put("source", event.getSource());
-    return information;
   }
 }

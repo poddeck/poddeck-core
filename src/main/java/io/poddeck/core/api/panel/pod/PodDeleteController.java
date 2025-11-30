@@ -2,7 +2,6 @@ package io.poddeck.core.api.panel.pod;
 
 import io.poddeck.common.PodDeleteRequest;
 import io.poddeck.common.PodDeleteResponse;
-import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
@@ -22,7 +21,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-public final class PodDeleteController extends ClusterRestController {
+public final class PodDeleteController extends PodRestController {
   private final AgentRegistry agentRegistry;
   private final AgentCommandFactory commandFactory;
 
@@ -48,7 +47,7 @@ public final class PodDeleteController extends ClusterRestController {
       .thenCompose(cluster -> deletePod(cluster, namespace, pod));
   }
 
-  public CompletableFuture<Map<String, Object>> deletePod(
+  private CompletableFuture<Map<String, Object>> deletePod(
     Cluster cluster, String namespace, String pod
   ) {
     var agent = agentRegistry.findByCluster(cluster);
