@@ -52,11 +52,10 @@ public class TunnelService extends TunnelServiceGrpc.TunnelServiceImplBase {
 
       @Override
       public void onError(Throwable throwable) {
+        log.processError(throwable);
         if (throwable instanceof StatusRuntimeException) {
           processDisconnect(stream);
-          return;
         }
-        log.processError(throwable);
       }
 
       @Override

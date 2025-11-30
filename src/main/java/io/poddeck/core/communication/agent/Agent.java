@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "create")
@@ -17,6 +19,7 @@ public final class Agent {
   private final UUID cluster;
   @Getter
   private final StreamObserver<TunnelMessage> stream;
+  private final Executor executor = Executors.newSingleThreadExecutor();
 
   public void send(Message message) {
     send("", message);
@@ -28,6 +31,10 @@ public final class Agent {
     if (!requestId.isEmpty()) {
       tunnelMessage.setRequestId(requestId);
     }
-    stream.onNext(tunnelMessage.build());
+    send(tunnelMessage.build());
+  }
+
+  private void send(TunnelMessage message) {
+    executor.execute(() -> stream.onNext(message));
   }
 }

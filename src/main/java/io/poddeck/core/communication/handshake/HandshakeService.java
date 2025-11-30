@@ -20,7 +20,14 @@ public final class HandshakeService {
   ) {
     log.info("Handshaking with cluster " + handshakeRequest.getCluster());
     //TODO: CHECK CLUSTER ID & KEY
-    var agent = Agent.create(UUID.fromString(handshakeRequest.getCluster()), stream);
+    var clusterId = UUID.fromString(handshakeRequest.getCluster());
+    var existingAgentOptional = agentRegistry.findByCluster(clusterId);
+    if (existingAgentOptional.isPresent()) {
+      var existingAgent = existingAgentOptional.get();
+      existingAgent.stream().onCompleted();
+      agentRegistry.unregister(existingAgent);
+    }
+    var agent = Agent.create(clusterId, stream);
     agentRegistry.register(agent);
   }
 }
