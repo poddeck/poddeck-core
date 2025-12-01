@@ -63,7 +63,7 @@ dependencies {
 
   implementation("dev.samstevens.totp:totp:1.7.1")
 
-  implementation("com.maxmind.geoip2:geoip2:4.4.0") {
+  implementation("com.maxmind.geoip2:geoip2:5.0.0") {
     exclude(group = "commons-logging", module = "commons-logging")
   }
 
