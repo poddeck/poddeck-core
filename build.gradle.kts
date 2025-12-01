@@ -38,7 +38,7 @@ dependencies {
 
   implementation("org.json:json:20250517")
 
-  implementation("org.apache.commons:commons-configuration2:2.12.0")
+  implementation("org.apache.commons:commons-configuration2:2.13.0")
   implementation("commons-beanutils:commons-beanutils:1.11.0")
 
   implementation("org.postgresql:postgresql:42.7.8")
