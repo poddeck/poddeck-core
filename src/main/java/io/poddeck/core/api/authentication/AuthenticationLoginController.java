@@ -136,8 +136,8 @@ public final class AuthenticationLoginController extends PanelRestController {
     var ipAddress = request.getHeader("X-Real-IP");
     try {
       var location = geoDatabaseReader.city(InetAddress.getByName(ipAddress));
-      country = location.getCountry().getName();
-      city = location.getCity().getName();
+      country = location.country().name();
+      city = location.city().name();
       platform = UserAgent.create(request.getHeader("User-Agent"))
         .findPlatform();
     } catch (Exception ignored) {
