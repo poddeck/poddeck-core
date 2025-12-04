@@ -43,6 +43,7 @@ public class DeploymentRestController extends ClusterRestController {
       .stream().map(this::assembleConditionInformation).toList());
     information.put("events", deployment.getEventsList()
       .stream().map(this::assembleEventInformation).toList());
+    information.put("raw", deployment.getRaw());
     return information;
   }
 
