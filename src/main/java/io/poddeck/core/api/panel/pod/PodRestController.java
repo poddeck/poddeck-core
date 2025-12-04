@@ -41,6 +41,7 @@ public class PodRestController extends ClusterRestController {
     information.put("host_ip", pod.getStatus().getHostIp());
     information.put("labels", pod.getMetadata().getLabelsMap());
     information.put("annotations", pod.getMetadata().getAnnotationsMap());
+    information.put("controlled_by", pod.getMetadata().getControlledBy());
     information.put("containers", pod.getSpec().getContainersList().stream()
       .map(container -> assembleContainerInformation(container,
         pod.getStatus().getStatusesList().stream()
