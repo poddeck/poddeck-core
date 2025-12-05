@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.security.Key;
+import java.util.Comparator;
 import java.util.Map;
 
 @Getter(AccessLevel.PROTECTED)
@@ -39,8 +40,14 @@ public class DeploymentRestController extends ClusterRestController {
     information.put("age", deployment.getStatus().getAge());
     information.put("labels", deployment.getMetadata().getLabelsMap());
     information.put("annotations", deployment.getMetadata().getAnnotationsMap());
+    var template = deployment.getSpec().getTemplate().getSpec();
+    var primary = template.getContainersCount() > 0 ?
+      template.getContainers(0) : null;
+    information.put("container_name", primary != null ? primary.getName() : "");
+    information.put("container_image", primary != null ? primary.getImage() : "");
     information.put("conditions", deployment.getStatus().getConditionsList()
-      .stream().map(this::assembleConditionInformation).toList());
+      .stream().sorted(Comparator.comparingLong(DeploymentCondition::getLastUpdate))
+      .map(this::assembleConditionInformation).toList());
     information.put("events", deployment.getEventsList()
       .stream().map(this::assembleEventInformation).toList());
     information.put("raw", deployment.getRaw());
@@ -55,6 +62,7 @@ public class DeploymentRestController extends ClusterRestController {
     information.put("status", condition.getStatus());
     information.put("reason", condition.getReason());
     information.put("message", condition.getMessage());
+    information.put("last_update", condition.getLastUpdate());
     return information;
   }
 
