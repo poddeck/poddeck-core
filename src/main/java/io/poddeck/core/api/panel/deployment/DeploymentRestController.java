@@ -40,11 +40,6 @@ public class DeploymentRestController extends ClusterRestController {
     information.put("age", deployment.getStatus().getAge());
     information.put("labels", deployment.getMetadata().getLabelsMap());
     information.put("annotations", deployment.getMetadata().getAnnotationsMap());
-    var template = deployment.getSpec().getTemplate().getSpec();
-    var primary = template.getContainersCount() > 0 ?
-      template.getContainers(0) : null;
-    information.put("container_name", primary != null ? primary.getName() : "");
-    information.put("container_image", primary != null ? primary.getImage() : "");
     information.put("replica_set", deployment.getStatus().getReplicaSet());
     information.put("conditions", deployment.getStatus().getConditionsList()
       .stream().sorted(Comparator.comparingLong(DeploymentCondition::getLastUpdate))
@@ -52,6 +47,26 @@ public class DeploymentRestController extends ClusterRestController {
     information.put("events", deployment.getEventsList()
       .stream().map(this::assembleEventInformation).toList());
     information.put("raw", deployment.getRaw());
+    information.putAll(assembleContainerInformation(deployment));
+    return information;
+  }
+
+  private Map<String, Object> assembleContainerInformation(Deployment deployment) {
+    var template = deployment.getSpec().getTemplate().getSpec();
+    var primary = template.getContainersCount() > 0 ?
+      template.getContainers(0) : null;
+    var resources = primary != null ? primary.getResources() : null;
+    var information = Maps.<String, Object>newHashMap();
+    information.put("container_name", primary != null ? primary.getName() : "");
+    information.put("container_image", primary != null ? primary.getImage() : "");
+    information.put("container_cpu_limit", resources != null ?
+      resources.getCpuLimit() : -1);
+    information.put("container_cpu_request", resources != null ?
+      resources.getCpuRequest() : -1);
+    information.put("container_memory_limit", resources != null ?
+      resources.getMemoryLimit() : -1);
+    information.put("container_memory_request", resources != null ?
+      resources.getMemoryRequest() : -1);
     return information;
   }
 
