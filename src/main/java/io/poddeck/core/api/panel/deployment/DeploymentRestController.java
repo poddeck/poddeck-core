@@ -45,6 +45,7 @@ public class DeploymentRestController extends ClusterRestController {
       template.getContainers(0) : null;
     information.put("container_name", primary != null ? primary.getName() : "");
     information.put("container_image", primary != null ? primary.getImage() : "");
+    information.put("replica_set", deployment.getStatus().getReplicaSet());
     information.put("conditions", deployment.getStatus().getConditionsList()
       .stream().sorted(Comparator.comparingLong(DeploymentCondition::getLastUpdate))
       .map(this::assembleConditionInformation).toList());
