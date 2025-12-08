@@ -1,17 +1,15 @@
 package io.poddeck.core;
 
-import io.poddeck.common.MetricReport;
 import io.poddeck.common.event.EventExecutor;
+import io.poddeck.common.event.HookRegistry;
 import io.poddeck.common.log.Log;
 import io.poddeck.core.api.ApiConfiguration;
 import io.poddeck.core.application.ApplicationLaunchEvent;
-import io.poddeck.core.application.ApplicationPostRunEvent;
-import io.poddeck.core.application.ApplicationPreRunEvent;
+import io.poddeck.core.communication.CommunicationHook;
 import io.poddeck.core.communication.CommunicationServer;
-import io.poddeck.core.communication.metric.MetricService;
-import io.poddeck.core.communication.service.ServiceRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Collections;
@@ -30,28 +28,29 @@ public class CoreApplication {
         log.processError(throwable));
       try {
         log.info("Initializing PodDeck - Core");
-        var eventExecutor = coreContext.getBean(EventExecutor.class);
-        eventExecutor.execute(ApplicationLaunchEvent.create());
         var application = new SpringApplication(CoreApplication.class);
         var apiConfiguration = coreContext.getBean(ApiConfiguration.class);
         application.setDefaultProperties(Collections.singletonMap("server.port",
           apiConfiguration.port()));
-        eventExecutor.execute(ApplicationPreRunEvent.create());
         log.info("Booting Spring...");
         var applicationContext = application.run(args);
+        var eventExecutor = applicationContext.getBean(EventExecutor.class);
+        registerHooks(applicationContext);
         log.info("Spring successfully booted");
         log.info("Starting communication server...");
-        var serviceRepository = applicationContext.getBean(ServiceRepository.class);
-        serviceRepository.register(MetricReport.class,
-          applicationContext.getBean(MetricService.class));
         var communicationServer = applicationContext.getBean(CommunicationServer.class);
         communicationServer.start();
         log.info("Communication server successfully started");
         log.info("Successfully booted PodDeck - Core");
-        eventExecutor.execute(ApplicationPostRunEvent.create());
+        eventExecutor.execute(ApplicationLaunchEvent.create());
       } catch (Exception exception) {
         log.processError(exception);
       }
     }
+  }
+
+  private static void registerHooks(ConfigurableApplicationContext context) {
+    var hookRegistry = context.getBean(HookRegistry.class);
+    hookRegistry.register(context.getBean(CommunicationHook.class));
   }
 }
