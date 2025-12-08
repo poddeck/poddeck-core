@@ -4,6 +4,7 @@ import com.beust.jcommander.internal.Lists;
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
 import io.poddeck.core.cluster.Cluster;
+import io.poddeck.core.cluster.ClusterEventRepository;
 import io.poddeck.core.cluster.ClusterMetricRepository;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.member.MemberRepository;
@@ -23,14 +24,17 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 public final class ClusterDeleteController extends ClusterRestController {
   private final ClusterMetricRepository metricRepository;
+  private final ClusterEventRepository eventRepository;
 
   private ClusterDeleteController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, ClusterRepository clusterRepository,
-    ClusterMetricRepository metricRepository
+    ClusterMetricRepository metricRepository,
+    ClusterEventRepository eventRepository
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
     this.metricRepository = metricRepository;
+    this.eventRepository = eventRepository;
   }
 
   @RequestMapping(path = "/cluster/delete/", method = RequestMethod.POST)
@@ -55,6 +59,7 @@ public final class ClusterDeleteController extends ClusterRestController {
     var futures = Lists.<CompletableFuture<Void>>newArrayList();
     futures.add(clusterRepository().delete(cluster));
     futures.add(metricRepository.deleteByCluster(cluster.id()));
+    futures.add(eventRepository.deleteByCluster(cluster.id()));
     return clusterRepository().delete(cluster)
       .thenApply(_ -> Map.of("success", true));
   }
