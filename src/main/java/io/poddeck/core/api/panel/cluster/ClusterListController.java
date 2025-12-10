@@ -45,6 +45,7 @@ public final class ClusterListController extends ClusterRestController {
     information.put("id", cluster.id());
     information.put("name", cluster.name());
     information.put("icon", cluster.icon());
+    information.put("created_at", cluster.createdAt());
     information.put("online", agentRegistry.existsByCluster(cluster));
     return information;
   }
