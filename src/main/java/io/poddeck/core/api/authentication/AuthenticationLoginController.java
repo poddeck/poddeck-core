@@ -124,7 +124,8 @@ public final class AuthenticationLoginController extends PanelRestController {
       authentication.generateRefreshToken(member.id(), sessionId);
     storeSession(request, member.id(), sessionId, refreshToken);
     futureResponse.complete(Map.of("success", true,
-      "authentication_token", authenticationToken, "refresh_token", refreshToken));
+      "authentication_token", authenticationToken, "refresh_token", refreshToken,
+      "email", member.email(), "name", member.name()));
   }
 
   public void storeSession(
