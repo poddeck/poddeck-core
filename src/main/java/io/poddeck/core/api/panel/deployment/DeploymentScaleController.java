@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.deployment;
 import io.poddeck.common.DeploymentScaleRequest;
 import io.poddeck.common.DeploymentScaleResponse;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
@@ -35,6 +36,7 @@ public final class DeploymentScaleController extends DeploymentRestController {
     this.commandFactory = commandFactory;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/deployment/scale/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> scaleDeployment(
     HttpServletRequest request, @RequestBody String payload,

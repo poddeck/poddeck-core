@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.workload;
 import com.google.common.collect.Maps;
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.*;
 import io.poddeck.core.member.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ public final class WorkloadController extends ClusterRestController {
     this.metricRepository = metricRepository;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/workload/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> findWorkload(
     HttpServletRequest request, @RequestBody String payload,

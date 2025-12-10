@@ -6,6 +6,7 @@ import io.poddeck.common.NodeListRequest;
 import io.poddeck.common.NodeListResponse;
 import io.poddeck.common.iterator.AsyncIterator;
 import io.poddeck.core.api.panel.ClusterRestController;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterMetric;
 import io.poddeck.core.cluster.ClusterMetricRepository;
@@ -41,6 +42,7 @@ public final class NodeListController extends ClusterRestController {
     this.metricRepository = metricRepository;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/nodes/", method = RequestMethod.GET)
   public CompletableFuture<Map<String, Object>> findNodes(
     HttpServletRequest request

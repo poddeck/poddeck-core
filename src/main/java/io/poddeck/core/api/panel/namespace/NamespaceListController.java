@@ -5,6 +5,7 @@ import io.poddeck.common.Namespace;
 import io.poddeck.common.NamespaceListRequest;
 import io.poddeck.common.NamespaceListResponse;
 import io.poddeck.core.api.panel.ClusterRestController;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
@@ -35,6 +36,7 @@ public final class NamespaceListController extends ClusterRestController {
     this.commandFactory = commandFactory;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/namespaces/", method = RequestMethod.GET)
   public CompletableFuture<Map<String, Object>> findNamespaces(
     HttpServletRequest request

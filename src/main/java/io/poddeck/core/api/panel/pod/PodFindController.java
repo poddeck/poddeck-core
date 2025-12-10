@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.pod;
 import io.poddeck.common.PodFindRequest;
 import io.poddeck.common.PodFindResponse;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
@@ -35,6 +36,7 @@ public final class PodFindController extends PodRestController {
     this.commandFactory = commandFactory;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/pod/find/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> findPod(
     HttpServletRequest request, @RequestBody String payload,

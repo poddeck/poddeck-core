@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.cluster;
 import com.beust.jcommander.internal.Lists;
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterEventRepository;
 import io.poddeck.core.cluster.ClusterMetricRepository;
@@ -37,6 +38,7 @@ public final class ClusterDeleteController extends ClusterRestController {
     this.eventRepository = eventRepository;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/cluster/delete/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> deleteCluster(
     HttpServletRequest request, @RequestBody String payload,

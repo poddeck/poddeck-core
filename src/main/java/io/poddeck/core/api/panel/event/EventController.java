@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.event;
 import com.google.common.collect.Maps;
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterEvent;
 import io.poddeck.core.cluster.ClusterEventRepository;
@@ -34,6 +35,7 @@ public final class EventController extends ClusterRestController {
     this.eventRepository = eventRepository;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/events/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> findEvents(
     HttpServletRequest request, @RequestBody String payload,

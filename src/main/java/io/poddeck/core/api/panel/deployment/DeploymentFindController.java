@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.deployment;
 import io.poddeck.common.DeploymentFindRequest;
 import io.poddeck.common.DeploymentFindResponse;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
@@ -35,6 +36,7 @@ public final class DeploymentFindController extends DeploymentRestController {
     this.commandFactory = commandFactory;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/deployment/find/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> findDeployment(
     HttpServletRequest request, @RequestBody String payload,

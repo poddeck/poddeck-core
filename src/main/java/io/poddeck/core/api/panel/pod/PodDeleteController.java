@@ -3,6 +3,7 @@ package io.poddeck.core.api.panel.pod;
 import io.poddeck.common.PodDeleteRequest;
 import io.poddeck.common.PodDeleteResponse;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
@@ -35,6 +36,7 @@ public final class PodDeleteController extends PodRestController {
     this.commandFactory = commandFactory;
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/pod/delete/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> deletePod(
     HttpServletRequest request, @RequestBody String payload,

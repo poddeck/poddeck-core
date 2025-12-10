@@ -2,6 +2,7 @@ package io.poddeck.core.api.panel.cluster;
 
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.api.request.ApiRequestBody;
+import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.member.MemberRepository;
@@ -27,6 +28,7 @@ public final class ClusterEditController extends ClusterRestController {
     super(authenticationKey, memberRepository, clusterRepository);
   }
 
+  @PanelEndpoint
   @RequestMapping(path = "/cluster/edit/", method = RequestMethod.POST)
   public CompletableFuture<Map<String, Object>> editCluster(
     HttpServletRequest request, @RequestBody String payload,
