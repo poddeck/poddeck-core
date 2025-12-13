@@ -6,6 +6,8 @@ import io.poddeck.core.cluster.ClusterEventRepository;
 import io.poddeck.core.cluster.ClusterEvent;
 import io.poddeck.core.communication.agent.Agent;
 import io.poddeck.core.communication.service.Service;
+import io.poddeck.core.notification.NotificationDispatch;
+import io.poddeck.core.notification.NotificationType;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,12 +18,20 @@ import java.util.UUID;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EventService implements Service<EventReport> {
   private final ClusterEventRepository eventRepository;
+  private final NotificationDispatch notificationDispatch;
 
   public void process(
     Agent agent, EventReport eventReport
   ) {
+    var event = eventReport.getEvent();
     eventRepository.generateAvailableId(UUID::randomUUID)
-      .thenAccept(id -> storeEvent(agent, eventReport.getEvent(), id));
+      .thenAccept(id -> storeEvent(agent, event, id));
+    var type = event.getType().toUpperCase();
+    if (type.equals("WARNING") || type.equals("ERROR")) {
+      notificationDispatch.dispatch(agent.cluster(), event.getMessage(),
+        event.getInvolvedObjectName() + " (" + event.getInvolvedObjectKind() + ")",
+        NotificationType.valueOf(type));
+    }
   }
 
   private void storeEvent(Agent agent, Event entry, UUID id) {
