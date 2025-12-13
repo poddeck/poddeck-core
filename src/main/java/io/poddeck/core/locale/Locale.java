@@ -34,10 +34,21 @@ public final class Locale {
   }
 
   private void deserialize(JSONObject json) {
+    flatten("", json);
+  }
+
+  private void flatten(String prefix, JSONObject json) {
     for (var key : json.keySet()) {
-      locale.put(key, json.getString(key));
+      var value = json.get(key);
+      var fullKey = prefix.isEmpty() ? key : prefix + "." + key;
+      if (value instanceof JSONObject nested) {
+        flatten(fullKey, nested);
+      } else {
+        locale.put(fullKey, value.toString());
+      }
     }
   }
+
 
   public void addLocale(Locale newLocale) {
     locale.putAll(newLocale.locale);
