@@ -1,5 +1,27 @@
 {
   "panel": {
+    "namespace": {
+      "create": {
+        "notification": {
+          "title": "Namensraum {0} erstellt",
+          "description": "Der Namensraum {0} wurde erfolgreich erstellt"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "Namensraum {0} gelöscht",
+          "description": "Der Namensraum {0} wurde erfolgreich gelöscht"
+        }
+      }
+    },
+    "pod": {
+      "delete": {
+        "notification": {
+          "title": "Pod {0} gelöscht",
+          "description": "Der Pod {0} wurde erfolgreich gelöscht"
+        }
+      }
+    },
     "deployment": {
       "create": {
         "notification": {

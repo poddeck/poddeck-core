@@ -9,6 +9,8 @@ import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
 import io.poddeck.core.communication.agent.command.AgentCommandFactory;
 import io.poddeck.core.member.MemberRepository;
+import io.poddeck.core.notification.NotificationDispatch;
+import io.poddeck.core.notification.NotificationType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,15 +27,18 @@ import java.util.concurrent.CompletableFuture;
 public final class PodDeleteController extends PodRestController {
   private final AgentRegistry agentRegistry;
   private final AgentCommandFactory commandFactory;
+  private final NotificationDispatch notificationDispatch;
 
   private PodDeleteController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, ClusterRepository clusterRepository,
-    AgentRegistry agentRegistry, AgentCommandFactory commandFactory
+    AgentRegistry agentRegistry, AgentCommandFactory commandFactory,
+    NotificationDispatch notificationDispatch
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
     this.agentRegistry = agentRegistry;
     this.commandFactory = commandFactory;
+    this.notificationDispatch = notificationDispatch;
   }
 
   @PanelEndpoint
@@ -60,6 +65,17 @@ public final class PodDeleteController extends PodRestController {
     return commandFactory.create(agent.get())
       .execute(PodDeleteRequest.newBuilder()
         .setNamespace(namespace).setPod(pod).build(), PodDeleteResponse.class)
-      .thenApply(response -> Map.of("success", response.getSuccess()));
+      .thenApply(response -> processDeletePodResult(cluster, pod, response));
+  }
+
+  private Map<String, Object> processDeletePodResult(
+    Cluster cluster, String pod, PodDeleteResponse response
+  ) {
+    if (response.getSuccess()) {
+      notificationDispatch.dispatch(cluster.id(), NotificationType.REPORT,
+        "panel.pod.delete.notification.title",
+        "panel.pod.delete.notification.description", pod);
+    }
+    return Map.of("success", response.getSuccess());
   }
 }

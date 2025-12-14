@@ -1,5 +1,27 @@
 {
   "panel": {
+    "namespace": {
+      "create": {
+        "notification": {
+          "title": "Namespace {0} created",
+          "description": "The namespace {0} has been successfully created"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "Namespace {0} deleted",
+          "description": "The namespace {0} has been successfully deleted"
+        }
+      }
+    },
+    "pod": {
+      "delete": {
+        "notification": {
+          "title": "Pod {0} deleted",
+          "description": "The pod {0} has been successfully deleted"
+        }
+      }
+    },
     "deployment": {
       "create": {
         "notification": {
