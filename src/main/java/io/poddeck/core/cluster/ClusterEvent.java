@@ -16,7 +16,7 @@ import java.util.UUID;
 @Table(name = "cluster_event")
 @Getter
 @Accessors(fluent = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "create")
 public final class ClusterEvent {
   @Id

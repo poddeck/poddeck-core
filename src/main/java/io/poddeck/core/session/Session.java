@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "member_session")
 @Getter
 @Accessors(fluent = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "create")
 public final class Session {
   @Id

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(name = "member_multi_factor_submission")
 @Getter
 @Accessors(fluent = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "create")
 public final class MultiFactorSubmission {
   @Id
