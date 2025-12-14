@@ -9,6 +9,8 @@ import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
 import io.poddeck.core.communication.agent.command.AgentCommandFactory;
 import io.poddeck.core.member.MemberRepository;
+import io.poddeck.core.notification.NotificationDispatch;
+import io.poddeck.core.notification.NotificationType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,15 +27,18 @@ import java.util.concurrent.CompletableFuture;
 public final class DeploymentDeleteController extends DeploymentRestController {
   private final AgentRegistry agentRegistry;
   private final AgentCommandFactory commandFactory;
+  private final NotificationDispatch notificationDispatch;
 
   private DeploymentDeleteController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, ClusterRepository clusterRepository,
-    AgentRegistry agentRegistry, AgentCommandFactory commandFactory
+    AgentRegistry agentRegistry, AgentCommandFactory commandFactory,
+    NotificationDispatch notificationDispatch
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
     this.agentRegistry = agentRegistry;
     this.commandFactory = commandFactory;
+    this.notificationDispatch = notificationDispatch;
   }
 
   @PanelEndpoint
@@ -61,6 +66,18 @@ public final class DeploymentDeleteController extends DeploymentRestController {
       .execute(DeploymentDeleteRequest.newBuilder()
           .setNamespace(namespace).setDeployment(deployment).build(),
         DeploymentDeleteResponse.class)
-      .thenApply(response -> Map.of("success", response.getSuccess()));
+      .thenApply(response -> processDeleteDeploymentResult(cluster,
+        deployment, response));
+  }
+
+  private Map<String, Object> processDeleteDeploymentResult(
+    Cluster cluster, String deployment, DeploymentDeleteResponse response
+  ) {
+    if (response.getSuccess()) {
+      notificationDispatch.dispatch(cluster.id(), NotificationType.REPORT,
+        "panel.deployment.delete.notification.title",
+        "panel.deployment.delete.notification.description", deployment);
+    }
+    return Map.of("success", response.getSuccess());
   }
 }

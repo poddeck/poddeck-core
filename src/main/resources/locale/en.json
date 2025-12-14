@@ -1,2 +1,36 @@
 {
+  "panel": {
+    "deployment": {
+      "create": {
+        "notification": {
+          "title": "Deployment {0} created",
+          "description": "The deployment {0} has been successfully created"
+        }
+      },
+      "edit": {
+        "notification": {
+          "title": "Deployment {0} edited",
+          "description": "The deployment {0} has been successfully edited"
+        }
+      },
+      "restart": {
+        "notification": {
+          "title": "Deployment {0} restarted",
+          "description": "The deployment {0} has been successfully manually restarted"
+        }
+      },
+      "scale": {
+        "notification": {
+          "title": "Deployment {0} scaled",
+          "description": "The deployment {0} has been successfully scaled"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "Deployment {0} deleted",
+          "description": "The deployment {0} has been successfully deleted"
+        }
+      }
+    }
+  }
 }
