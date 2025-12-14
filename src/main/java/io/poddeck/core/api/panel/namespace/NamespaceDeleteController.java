@@ -10,6 +10,8 @@ import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.AgentRegistry;
 import io.poddeck.core.communication.agent.command.AgentCommandFactory;
 import io.poddeck.core.member.MemberRepository;
+import io.poddeck.core.notification.NotificationDispatch;
+import io.poddeck.core.notification.NotificationType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,15 +28,18 @@ import java.util.concurrent.CompletableFuture;
 public final class NamespaceDeleteController extends ClusterRestController {
   private final AgentRegistry agentRegistry;
   private final AgentCommandFactory commandFactory;
+  private final NotificationDispatch notificationDispatch;
 
   private NamespaceDeleteController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, ClusterRepository clusterRepository,
-    AgentRegistry agentRegistry, AgentCommandFactory commandFactory
+    AgentRegistry agentRegistry, AgentCommandFactory commandFactory,
+    NotificationDispatch notificationDispatch
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
     this.agentRegistry = agentRegistry;
     this.commandFactory = commandFactory;
+    this.notificationDispatch = notificationDispatch;
   }
 
   @PanelEndpoint
@@ -60,6 +65,18 @@ public final class NamespaceDeleteController extends ClusterRestController {
     return commandFactory.create(agent.get())
       .execute(NamespaceDeleteRequest.newBuilder().setName(name).build(),
         NamespaceDeleteResponse.class)
-      .thenApply(response -> Map.of("success", response.getSuccess()));
+      .thenApply(response -> processDeleteNamespaceResult(cluster,
+        name, response));
+  }
+
+  private Map<String, Object> processDeleteNamespaceResult(
+    Cluster cluster, String namespace, NamespaceDeleteResponse response
+  ) {
+    if (response.getSuccess()) {
+      notificationDispatch.dispatch(cluster.id(), NotificationType.REPORT,
+        "panel.namespace.delete.notification.title",
+        "panel.namespace.delete.notification.description", namespace);
+    }
+    return Map.of("success", response.getSuccess());
   }
 }
