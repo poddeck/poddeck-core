@@ -7,13 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "notification")
 @Getter
 @Accessors(fluent = true)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(staticName = "create")
 public final class Notification {
   @Id
@@ -27,6 +28,13 @@ public final class Notification {
   private String title;
   @Column(name = "description", nullable = false)
   private String description;
+  @ElementCollection
+  @CollectionTable(
+    name = "notification_parameters",
+    joinColumns = @JoinColumn(name = "id")
+  )
+  @Column(name = "parameters")
+  private List<String> parameters;
   @Enumerated(EnumType.STRING)
   @Column(name = "type", nullable = false)
   private NotificationType type;

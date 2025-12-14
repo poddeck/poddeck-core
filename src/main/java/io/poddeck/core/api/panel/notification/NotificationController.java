@@ -7,6 +7,8 @@ import io.poddeck.core.api.request.ApiRequestBody;
 import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
+import io.poddeck.core.locale.Translation;
+import io.poddeck.core.member.Member;
 import io.poddeck.core.member.MemberRepository;
 import io.poddeck.core.notification.Notification;
 import io.poddeck.core.notification.NotificationRepository;
@@ -26,14 +28,16 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 public final class NotificationController extends ClusterRestController {
   private final NotificationRepository notificationRepository;
+  private final Translation translation;
 
   private NotificationController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, ClusterRepository clusterRepository,
-    NotificationRepository notificationRepository
+    NotificationRepository notificationRepository, Translation translation
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
     this.notificationRepository = notificationRepository;
+    this.translation = translation;
   }
 
   @PanelEndpoint
@@ -41,12 +45,14 @@ public final class NotificationController extends ClusterRestController {
   public CompletableFuture<Map<String, Object>> findAllNotifications(
     HttpServletRequest request
   ) {
-    return notificationRepository.findAllByMember(findMemberId(request))
-      .thenCompose(notifications -> findClusters(notifications)
-        .thenApply(clusters -> Map.of("notifications", notifications.stream()
-          .sorted(Comparator.comparing(Notification::createdAt).reversed())
-          .map(notification -> assembleNotificationInformation(notification, clusters))
-          .toList())));
+    return findMember(request)
+      .thenCompose(member -> notificationRepository.findAllByMember(member.id())
+        .thenCompose(notifications -> findClusters(notifications)
+          .thenApply(clusters -> Map.of("notifications", notifications.stream()
+            .sorted(Comparator.comparing(Notification::createdAt).reversed())
+            .map(notification -> assembleNotificationInformation(member,
+              notification, clusters))
+            .toList()))));
   }
 
   private CompletableFuture<List<Optional<Cluster>>> findClusters(
@@ -62,41 +68,47 @@ public final class NotificationController extends ClusterRestController {
   public CompletableFuture<Map<String, Object>> findClusterNotifications(
     HttpServletRequest request
   ) {
-    return findCluster(request).thenCompose(cluster ->
-      findClusterNotifications(findMemberId(request), cluster));
+    return findMember(request)
+      .thenCompose(member -> findCluster(request)
+        .thenCompose(cluster -> findClusterNotifications(member, cluster)));
   }
 
   private CompletableFuture<Map<String, Object>> findClusterNotifications(
-    UUID memberId, Cluster cluster
+    Member member, Cluster cluster
   ) {
-    return notificationRepository.findAllByMemberAndCluster(memberId, cluster.id())
+    return notificationRepository.findAllByMemberAndCluster(member.id(), cluster.id())
       .thenApply(notifications -> Map.of("notifications", notifications.stream()
         .sorted(Comparator.comparing(Notification::createdAt).reversed())
-        .map(notification -> assembleNotificationInformation(notification, cluster))
+        .map(notification -> assembleNotificationInformation(member,
+          notification, cluster))
         .toList()));
   }
 
   private Map<String, Object> assembleNotificationInformation(
-    Notification notification, List<Optional<Cluster>> clusters
+    Member member, Notification notification, List<Optional<Cluster>> clusters
   ) {
     var cluster = clusters.stream().flatMap(Optional::stream)
-      .filter(entry -> entry.equals(notification.cluster())).findFirst();
-    return assembleNotificationInformation(notification, cluster);
+      .filter(entry -> entry.id().equals(notification.cluster())).findFirst();
+    return assembleNotificationInformation(member, notification, cluster);
   }
 
   private Map<String, Object> assembleNotificationInformation(
-    Notification notification, Cluster cluster
+    Member member, Notification notification, Cluster cluster
   ) {
-    return assembleNotificationInformation(notification, Optional.of(cluster));
+    return assembleNotificationInformation(member, notification,
+      Optional.of(cluster));
   }
 
   private Map<String, Object> assembleNotificationInformation(
-    Notification notification, Optional<Cluster> cluster
+    Member member, Notification notification, Optional<Cluster> cluster
   ) {
     var information = Maps.<String, Object>newHashMap();
     information.put("id", notification.id());
-    information.put("title", notification.title());
-    information.put("description", notification.description());
+    var parameters = notification.parameters().toArray(String[]::new);
+    information.put("title", translation.translateMember(member,
+      notification.title(), parameters));
+    information.put("description", translation.translateMember(member,
+      notification.description(), parameters));
     information.put("type", notification.type());
     information.put("state", notification.state());
     information.put("created_at", notification.createdAt());

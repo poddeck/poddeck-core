@@ -28,9 +28,9 @@ public final class EventService implements Service<EventReport> {
       .thenAccept(id -> storeEvent(agent, event, id));
     var type = event.getType().toUpperCase();
     if (type.equals("WARNING") || type.equals("ERROR")) {
-      notificationDispatch.dispatch(agent.cluster(), event.getMessage(),
-        event.getInvolvedObjectName() + " (" + event.getInvolvedObjectKind() + ")",
-        NotificationType.valueOf(type));
+      notificationDispatch.dispatch(agent.cluster(), NotificationType.valueOf(type),
+        event.getMessage(),
+        event.getInvolvedObjectName() + " (" + event.getInvolvedObjectKind() + ")");
     }
   }
 
