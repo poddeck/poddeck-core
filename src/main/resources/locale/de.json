@@ -53,6 +53,20 @@
           "description": "Das Deployment {0} wurde erfolgreich gelöscht"
         }
       }
+    },
+    "service": {
+      "create": {
+        "notification": {
+          "title": "Service {0} erstellt",
+          "description": "Der Service {0} wurde erfolgreich erstellt"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "Service {0} gelöscht",
+          "description": "Der Service {0} wurde erfolgreich gelöscht"
+        }
+      }
     }
   }
 }
