@@ -31,4 +31,8 @@ public final class MultiFactorSubmission {
   private List<String> recoveryCodes;
   @Column(name = "confirmed", nullable = false)
   private boolean confirmed;
+
+  public void confirm() {
+    confirmed = true;
+  }
 }
