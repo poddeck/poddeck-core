@@ -42,7 +42,7 @@ dependencies {
   implementation("commons-beanutils:commons-beanutils:1.11.0")
 
   implementation("org.postgresql:postgresql:42.7.8")
-  implementation("org.hibernate.orm:hibernate-core:7.1.11.Final")
+  implementation("org.hibernate.orm:hibernate-core:7.2.0.Final")
   implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.grpc:grpc-stub:1.77.0")
@@ -51,8 +51,8 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:4.33.2")
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.0.0")
-  implementation("org.springframework:spring-core:7.0.1")
-  implementation("org.springframework.data:spring-data-jpa:4.0.0")
+  implementation("org.springframework:spring-core:7.0.2")
+  implementation("org.springframework.data:spring-data-jpa:4.0.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.0")
   implementation("com.h2database:h2:2.4.240")
 
@@ -64,7 +64,7 @@ dependencies {
 
   implementation("dev.samstevens.totp:totp:1.7.1")
 
-  implementation("com.maxmind.geoip2:geoip2:5.0.1") {
+  implementation("com.maxmind.geoip2:geoip2:5.0.2") {
     exclude(group = "commons-logging", module = "commons-logging")
   }
 
