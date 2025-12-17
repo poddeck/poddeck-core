@@ -81,12 +81,13 @@ public final class SecuritySettingsController extends PanelRestController {
       return CompletableFuture.completedFuture(Maps.newHashMap());
     }
     var auth = authFactory.createAuth(memberId);
-    return auth.setup().thenCompose(value -> auth.generateQRCode()
+    return auth.setup().thenCompose(_ -> auth.generateQRCode()
       .thenApply(Base64.getEncoder()::encodeToString)
       .thenCompose(qrCodeEncoded -> submissionRepository.findById(memberId)
         .thenApply(Optional::get)
-        .thenApply(authMember -> Map.of("qrCode", qrCodeEncoded, "secret",
-          authMember.secret(), "recoveryCodes", authMember.recoveryCodes()))));
+        .thenApply(authMember -> Map.of("success", true, "qrCode",
+          qrCodeEncoded, "secret", authMember.secret(), "recoveryCodes",
+          authMember.recoveryCodes()))));
   }
 
   @PanelEndpoint
@@ -97,24 +98,18 @@ public final class SecuritySettingsController extends PanelRestController {
   ) {
     var body = ApiRequestBody.of(payload, response);
     var memberId = findMemberId(request);
-    return submissionRepository.existsById(memberId)
-      .thenCompose(exists -> confirmMultiFactorAuth(memberId,
-        body.getString("code"), exists));
+    return submissionRepository.findById(memberId)
+      .thenCompose(submission -> confirmMultiFactorAuth(memberId,
+        body.getString("code"), submission));
   }
 
   private CompletableFuture<Map<String, Object>> confirmMultiFactorAuth(
-    UUID memberId, String code, boolean multiFactorEnabled
+    UUID memberId, String code, Optional<MultiFactorSubmission> submissionOptional
   ) {
-    if (!multiFactorEnabled) {
+    if (submissionOptional.isEmpty()) {
       return CompletableFuture.completedFuture(Map.of("success", false));
     }
-    return submissionRepository.findById(memberId)
-      .thenCompose(auth -> confirmMultiFactorAuth(memberId, code, auth.get()));
-  }
-
-  private CompletableFuture<Map<String, Object>> confirmMultiFactorAuth(
-    UUID memberId, String code, MultiFactorSubmission submission
-  ) {
+    var submission = submissionOptional.get();
     if (submission.confirmed()) {
       return CompletableFuture.completedFuture(Map.of("success", false));
     }
@@ -133,22 +128,21 @@ public final class SecuritySettingsController extends PanelRestController {
   }
 
   @PanelEndpoint
-  @RequestMapping(path = "/settings/2fa/isConfirmed/", method = RequestMethod.GET)
+  @RequestMapping(path = "/settings/2fa/confirmation/check/", method = RequestMethod.GET)
   public CompletableFuture<Map<String, Object>> isMultiFactorAuthConfirmed(
     HttpServletRequest request
   ) {
     var memberId = findMemberId(request);
-    return submissionRepository.existsById(memberId)
-      .thenCompose(exists -> isMultiFactorAuthConfirmed(memberId, exists));
+    return submissionRepository.findById(memberId)
+      .thenApply(this::isMultiFactorAuthConfirmed);
   }
 
-  private CompletableFuture<Map<String, Object>> isMultiFactorAuthConfirmed(
-    UUID memberId, boolean multiFactorEnabled
+  private Map<String, Object> isMultiFactorAuthConfirmed(
+    Optional<MultiFactorSubmission> submissionOptional
   ) {
-    if (!multiFactorEnabled) {
-      return CompletableFuture.completedFuture(Map.of("success", false));
+    if (submissionOptional.isEmpty()) {
+      return Map.of("success", false);
     }
-    return submissionRepository.findById(memberId)
-      .thenApply(auth -> Map.of("success", true, "confirmed", auth.get().confirmed()));
+    return Map.of("success", true, "confirmed", submissionOptional.get().confirmed());
   }
 }
