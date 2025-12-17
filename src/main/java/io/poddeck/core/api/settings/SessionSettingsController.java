@@ -40,7 +40,7 @@ public final class SessionSettingsController extends PanelRestController {
     HttpServletRequest request
   ) {
     var memberSessionId = findSessionId(request);
-    return sessionRepository.findSessionsOfMemberByStatus(
+    return sessionRepository.findByMemberIdAndStatus(
         findMemberId(request), SessionStatus.ACTIVE)
       .thenApply(sessions -> Map.of("sessions", sessions.stream().map(session ->
         assemblySessionInformation(memberSessionId, session)).toList()));
