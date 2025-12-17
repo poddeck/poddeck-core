@@ -50,20 +50,8 @@ public final class AuthenticationLoginController extends PanelRestController {
     HttpServletResponse response
   ) {
     var body = ApiRequestBody.of(payload, response);
-    var loginFuture = login(request, body.getString("email").trim(),
+    return login(request, body.getString("email").trim(),
       body.getString("password"), body.getString("multi_factor_code"));
-    loginFuture.thenAccept(result -> applyLoginResponseStatus(response, result));
-    return loginFuture;
-  }
-
-  private void applyLoginResponseStatus(
-    HttpServletResponse response, Map<String, Object> result
-  ) {
-    if ((boolean) result.get("success")) {
-      response.setStatus(HttpServletResponse.SC_OK);
-      return;
-    }
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
   }
 
   private CompletableFuture<Map<String, Object>> login(
@@ -139,6 +127,9 @@ public final class AuthenticationLoginController extends PanelRestController {
       var location = geoDatabaseReader.city(InetAddress.getByName(ipAddress));
       country = location.country().name();
       city = location.city().name();
+    } catch (Exception ignored) {
+    }
+    try {
       platform = UserAgent.create(request.getHeader("User-Agent"))
         .findPlatform();
     } catch (Exception ignored) {
