@@ -78,7 +78,7 @@ public final class SecuritySettingsController extends PanelRestController {
   ) {
     if (multiFactorAuthEnabled) {
       submissionRepository.deleteById(memberId);
-      return CompletableFuture.completedFuture(Maps.newHashMap());
+      return CompletableFuture.completedFuture(Map.of("success", true));
     }
     var auth = authFactory.createAuth(memberId);
     return auth.setup().thenCompose(_ -> auth.generateQRCode()
