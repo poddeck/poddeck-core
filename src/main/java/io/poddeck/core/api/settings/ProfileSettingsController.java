@@ -49,6 +49,6 @@ public final class ProfileSettingsController extends PanelRestController {
 
   private CompletableFuture<Void> changeUsername(Member member, String newUsername) {
     member.changeName(newUsername);
-    return memberRepository().save(member).thenCompose(_ -> null);
+    return memberRepository().save(member).thenApply(_ -> null);
   }
 }
