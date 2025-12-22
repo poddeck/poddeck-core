@@ -67,6 +67,6 @@ public final class NodeFindController extends NodeRestController {
         metricRepository.findFirstByClusterAndNodeOrderByTimestampDesc(
           cluster.id(), node.getMetadata().getName())
           .thenApply(metric -> assembleNodeInformation(node, metric.get())))
-      .thenApply(node -> Map.of("node", node));
+      .thenApply(node -> Map.of("success", true, "node", node));
   }
 }

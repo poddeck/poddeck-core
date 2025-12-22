@@ -54,7 +54,7 @@ public final class NamespaceListController extends ClusterRestController {
       .execute(NamespaceListRequest.newBuilder().build(), NamespaceListResponse.class)
       .thenApply(namespaceListResponse -> namespaceListResponse.getItemsList().stream()
         .map(this::assembleNamespaceInformation).toList())
-      .thenApply(namespaces -> Map.of("namespaces", namespaces));
+      .thenApply(namespaces -> Map.of("success", true, "namespaces", namespaces));
   }
 
   private Map<String, Object> assembleNamespaceInformation(Namespace namespace) {

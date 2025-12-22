@@ -52,6 +52,6 @@ public final class DeploymentListController extends DeploymentRestController {
         DeploymentListResponse.class)
       .thenApply(response -> response.getItemsList().stream()
         .map(this::assembleDeploymentInformation).toList())
-      .thenApply(deployments -> Map.of("deployments", deployments));
+      .thenApply(deployments -> Map.of("success", true, "deployments", deployments));
   }
 }

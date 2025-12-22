@@ -57,7 +57,7 @@ public final class EventController extends ClusterRestController {
       .findEventsByClusterAndTimeRange(cluster.id(), start, end, pageable)
       .thenApply(events -> events.stream()
         .map(this::assembleEventInformation).toList())
-      .thenApply(events -> Map.of("events", events));
+      .thenApply(events -> Map.of("success", true, "events", events));
   }
 
   private Map<String, Object> assembleEventInformation(

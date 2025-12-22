@@ -51,6 +51,6 @@ public final class PodListController extends PodRestController {
       .execute(PodListRequest.newBuilder().build(), PodListResponse.class)
       .thenApply(podListResponse -> podListResponse.getItemsList().stream()
         .map(this::assemblePodInformation).toList())
-      .thenApply(pods -> Map.of("pods", pods));
+      .thenApply(pods -> Map.of("success", true, "pods", pods));
   }
 }

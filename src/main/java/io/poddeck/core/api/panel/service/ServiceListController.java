@@ -52,6 +52,6 @@ public final class ServiceListController extends ServiceRestController {
         ServiceListResponse.class)
       .thenApply(response -> response.getItemsList().stream()
         .map(this::assembleServiceInformation).toList())
-      .thenApply(services -> Map.of("services", services));
+      .thenApply(services -> Map.of("success", true, "services", services));
   }
 }
