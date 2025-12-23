@@ -1,7 +1,7 @@
 package io.poddeck.core.api.panel.node;
 
 import com.google.common.collect.Maps;
-import io.poddeck.common.Node;
+import io.poddeck.common.*;
 import io.poddeck.core.api.panel.ClusterRestController;
 import io.poddeck.core.cluster.ClusterMetric;
 import io.poddeck.core.cluster.ClusterRepository;
@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.security.Key;
+import java.util.Comparator;
 import java.util.Map;
 
 @Getter(AccessLevel.PROTECTED)
@@ -42,7 +43,40 @@ public class NodeRestController extends ClusterRestController {
     information.put("used_storage", metric.usedStorage());
     information.put("storage_ratio", metric.storageRatio());
     information.put("version", node.getStatus().getInfo().getKubeletVersion());
-    information.put("ready", node.getStatus().getCondition().getIsReady());
+    information.put("ready", node.getStatus().getConditionsList().stream()
+      .anyMatch(condition -> "Ready".equals(condition.getType()) &&
+        "True".equals(condition.getStatus())));
+    information.put("age", node.getStatus().getAge());
+    information.put("labels", node.getMetadata().getLabelsMap());
+    information.put("annotations", node.getMetadata().getAnnotationsMap());
+    information.put("conditions", node.getStatus().getConditionsList()
+      .stream().sorted(Comparator.comparingLong(NodeCondition::getLastTransition))
+      .map(this::assembleConditionInformation).toList());
+    information.put("events", node.getEventsList()
+      .stream().map(this::assembleEventInformation).toList());
+    return information;
+  }
+
+  private Map<String, Object> assembleConditionInformation(
+    NodeCondition condition
+  ) {
+    var information = Maps.<String, Object>newHashMap();
+    information.put("type", condition.getType());
+    information.put("status", condition.getStatus());
+    information.put("reason", condition.getReason());
+    information.put("message", condition.getMessage());
+    information.put("last_heartbeat", condition.getLastHeartbeat());
+    information.put("last_transition", condition.getLastTransition());
+    return information;
+  }
+
+  private Map<String, Object> assembleEventInformation(NodeEvent event) {
+    var information = Maps.<String, Object>newHashMap();
+    information.put("type", event.getType());
+    information.put("reason", event.getReason());
+    information.put("message", event.getMessage());
+    information.put("timestamp", event.getTimestamp());
+    information.put("source", event.getSource());
     return information;
   }
 }
