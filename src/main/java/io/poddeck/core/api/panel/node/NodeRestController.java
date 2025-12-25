@@ -42,7 +42,12 @@ public class NodeRestController extends ClusterRestController {
     information.put("total_storage", metric.totalStorage());
     information.put("used_storage", metric.usedStorage());
     information.put("storage_ratio", metric.storageRatio());
-    information.put("version", node.getStatus().getInfo().getKubeletVersion());
+    information.put("architecture", node.getStatus().getInfo().getArchitecture());
+    information.put("os_image", node.getStatus().getInfo().getOsImage());
+    information.put("operating_system", node.getStatus().getInfo().getOperatingSystem());
+    information.put("container_runtime_version",
+      node.getStatus().getInfo().getContainerRuntimeVersion());
+    information.put("kubelet_version", node.getStatus().getInfo().getKubeletVersion());
     information.put("ready", node.getStatus().getConditionsList().stream()
       .anyMatch(condition -> "Ready".equals(condition.getType()) &&
         "True".equals(condition.getStatus())));
