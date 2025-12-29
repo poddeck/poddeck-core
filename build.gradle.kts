@@ -45,9 +45,9 @@ dependencies {
   implementation("org.hibernate.orm:hibernate-core:7.2.0.Final")
   implementation("org.reflections:reflections:0.10.2")
 
-  implementation("io.grpc:grpc-stub:1.77.0")
-  implementation("io.grpc:grpc-protobuf:1.77.0")
-  implementation("io.grpc:grpc-netty:1.77.0")
+  implementation("io.grpc:grpc-stub:1.78.0")
+  implementation("io.grpc:grpc-protobuf:1.78.0")
+  implementation("io.grpc:grpc-netty:1.78.0")
   implementation("com.google.protobuf:protobuf-java:4.33.2")
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.0.1")
