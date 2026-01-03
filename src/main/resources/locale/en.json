@@ -54,6 +54,38 @@
         }
       }
     },
+    "daemon-set": {
+      "create": {
+        "notification": {
+          "title": "DaemonSet {0} created",
+          "description": "The DaemonSet {0} has been successfully created"
+        }
+      },
+      "edit": {
+        "notification": {
+          "title": "DaemonSet {0} edited",
+          "description": "The DaemonSet {0} has been successfully edited"
+        }
+      },
+      "restart": {
+        "notification": {
+          "title": "DaemonSet {0} restarted",
+          "description": "The DaemonSet {0} has been successfully manually restarted"
+        }
+      },
+      "scale": {
+        "notification": {
+          "title": "DaemonSet {0} scaled",
+          "description": "The DaemonSet {0} has been successfully scaled"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "DaemonSet {0} deleted",
+          "description": "The DaemonSet {0} has been successfully deleted"
+        }
+      }
+    },
     "service": {
       "create": {
         "notification": {
