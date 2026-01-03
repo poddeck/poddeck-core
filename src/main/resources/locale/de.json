@@ -73,16 +73,36 @@
           "description": "Das DaemonSet {0} wurde erfolgreich manuell neu gestartet"
         }
       },
-      "scale": {
-        "notification": {
-          "title": "DaemonSet {0} skaliert",
-          "description": "Das DaemonSet {0} wurde erfolgreich skaliert"
-        }
-      },
       "delete": {
         "notification": {
           "title": "DaemonSet {0} gelöscht",
           "description": "Das DaemonSet {0} wurde erfolgreich gelöscht"
+        }
+      }
+    },
+    "replica-set": {
+      "create": {
+        "notification": {
+          "title": "ReplicaSet {0} erstellt",
+          "description": "Das ReplicaSet {0} wurde erfolgreich erstellt"
+        }
+      },
+      "edit": {
+        "notification": {
+          "title": "ReplicaSet {0} bearbeitet",
+          "description": "Das ReplicaSet {0} wurde erfolgreich bearbeitet"
+        }
+      },
+      "scale": {
+        "notification": {
+          "title": "ReplicaSet {0} skaliert",
+          "description": "Das ReplicaSet {0} wurde erfolgreich skaliert"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "ReplicaSet {0} gelöscht",
+          "description": "Das ReplicaSet {0} wurde erfolgreich gelöscht"
         }
       }
     },
