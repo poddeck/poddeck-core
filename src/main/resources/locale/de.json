@@ -106,6 +106,38 @@
         }
       }
     },
+    "stateful-set": {
+      "create": {
+        "notification": {
+          "title": "StatefulSet {0} erstellt",
+          "description": "Das StatefulSet {0} wurde erfolgreich erstellt"
+        }
+      },
+      "edit": {
+        "notification": {
+          "title": "StatefulSet {0} bearbeitet",
+          "description": "Das StatefulSet {0} wurde erfolgreich bearbeitet"
+        }
+      },
+      "restart": {
+        "notification": {
+          "title": "StatefulSet {0} neu gestartet",
+          "description": "Das StatefulSet {0} wurde erfolgreich manuell neu gestartet"
+        }
+      },
+      "scale": {
+        "notification": {
+          "title": "StatefulSet {0} skaliert",
+          "description": "Das StatefulSet {0} wurde erfolgreich skaliert"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "StatefulSet {0} gelöscht",
+          "description": "Das StatefulSet {0} wurde erfolgreich gelöscht"
+        }
+      }
+    },
     "service": {
       "create": {
         "notification": {
