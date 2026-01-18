@@ -138,6 +138,32 @@
         }
       }
     },
+    "cron-job": {
+      "create": {
+        "notification": {
+          "title": "CronJob {0} created",
+          "description": "The CronJob {0} has been successfully created"
+        }
+      },
+      "edit": {
+        "notification": {
+          "title": "CronJob {0} edited",
+          "description": "The CronJob {0} has been successfully edited"
+        }
+      },
+      "suspend": {
+        "notification": {
+          "title": "CronJob {0} suspended",
+          "description": "The CronJob {0} has been successfully manually suspended"
+        }
+      },
+      "delete": {
+        "notification": {
+          "title": "CronJob {0} deleted",
+          "description": "The CronJob {0} has been successfully deleted"
+        }
+      }
+    },
     "service": {
       "create": {
         "notification": {
