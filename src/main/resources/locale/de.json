@@ -157,6 +157,12 @@
           "description": "Der CronJob {0} wurde erfolgreich manuell ausgesetzt"
         }
       },
+      "run": {
+        "notification": {
+          "title": "CronJob {0} ausgeführt",
+          "description": "Der CronJob {0} wurde erfolgreich manuell ausgeführt"
+        }
+      },
       "delete": {
         "notification": {
           "title": "CronJob {0} gelöscht",

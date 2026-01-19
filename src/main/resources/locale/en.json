@@ -157,6 +157,12 @@
           "description": "The CronJob {0} has been successfully manually suspended"
         }
       },
+      "run": {
+        "notification": {
+          "title": "CronJob {0} executed",
+          "description": "The CronJob {0} has been successfully manually executed"
+        }
+      },
       "delete": {
         "notification": {
           "title": "CronJob {0} deleted",

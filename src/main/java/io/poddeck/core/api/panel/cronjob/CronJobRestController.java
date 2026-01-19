@@ -35,6 +35,9 @@ public class CronJobRestController extends ClusterRestController {
       cronJob.getSpec().getSuccessfulJobsHistoryLimit());
     information.put("failed_jobs_history_limit",
       cronJob.getSpec().getFailedJobsHistoryLimit());
+    information.put("active", cronJob.getStatus().getActive());
+    information.put("last_schedule_time", cronJob.getStatus().getLastScheduleTime());
+    information.put("last_successful_time", cronJob.getStatus().getLastSuccessfulTime());
     information.put("age", cronJob.getStatus().getAge());
     information.put("labels", cronJob.getMetadata().getLabelsMap());
     information.put("annotations", cronJob.getMetadata().getAnnotationsMap());
