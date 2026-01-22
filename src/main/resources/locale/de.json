@@ -183,6 +183,14 @@
           "description": "Der Service {0} wurde erfolgreich gelöscht"
         }
       }
+    },
+    "audit": {
+      "perform": {
+        "notification": {
+          "title": "Prüfung ausgelöst",
+          "description": "Eine neue Prüfung wurde eingeleitet"
+        }
+      }
     }
   }
 }

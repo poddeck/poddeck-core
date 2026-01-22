@@ -183,6 +183,14 @@
           "description": "The service {0} has been successfully deleted"
         }
       }
+    },
+    "audit": {
+      "perform": {
+        "notification": {
+          "title": "Audit triggered",
+          "description": "A new audit was initiated"
+        }
+      }
     }
   }
 }
