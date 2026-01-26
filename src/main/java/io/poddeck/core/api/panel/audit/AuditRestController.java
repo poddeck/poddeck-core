@@ -28,6 +28,7 @@ public class AuditRestController extends ClusterRestController {
     information.put("controls", audit.getControlsList()
       .stream().map(this::assembleControlInformation).toList());
     information.put("totals", assembleTotalsInformation(audit.getTotals()));
+    information.put("time", audit.getTime());
     return information;
   }
 
