@@ -14,6 +14,20 @@
         }
       }
     },
+    "app": {
+      "install": {
+        "notification": {
+          "title": "App {0} installiert",
+          "description": "Die App {0} wurde erfolgreich installiert"
+        }
+      },
+      "uninstall": {
+        "notification": {
+          "title": "App {0} deinstalliert",
+          "description": "Die App {0} wurde erfolgreich deinstalliert"
+        }
+      }
+    },
     "pod": {
       "delete": {
         "notification": {
