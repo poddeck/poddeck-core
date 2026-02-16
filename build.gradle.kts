@@ -25,9 +25,9 @@ repositories {
 }
 
 dependencies {
-  testImplementation(platform("org.junit:junit-bom:6.0.2"))
-  testImplementation("org.junit.jupiter:junit-jupiter:6.0.2")
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.2")
+  testImplementation(platform("org.junit:junit-bom:6.0.3"))
+  testImplementation("org.junit.jupiter:junit-jupiter:6.0.3")
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
 
   implementation("com.google.guava:guava:33.5.0-jre")
 
