@@ -48,8 +48,8 @@ dependencies {
   implementation("io.grpc:grpc-stub:1.80.0")
   implementation("io.grpc:grpc-protobuf:1.80.0")
   implementation("io.grpc:grpc-netty:1.80.0")
-  implementation("com.google.protobuf:protobuf-java:4.34.0")
-  implementation("com.google.protobuf:protobuf-java-util:4.34.0")
+  implementation("com.google.protobuf:protobuf-java:4.34.1")
+  implementation("com.google.protobuf:protobuf-java-util:4.34.1")
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.0.3")
   implementation("org.springframework:spring-core:7.0.6")
