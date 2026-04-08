@@ -11,9 +11,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.Collections;
 
+@EnableAsync
+@EnableJpaRepositories(basePackages = "io.poddeck.core")
 @SpringBootApplication(scanBasePackages = {"io.poddeck.core"})
 public class CoreApplication {
   /**
