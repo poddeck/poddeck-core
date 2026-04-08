@@ -9,8 +9,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.security.Key;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -27,17 +29,15 @@ public class ClusterRestController extends PanelRestController {
     this.clusterRepository = clusterRepository;
   }
 
-  /**
-   * Is used to find the member that send the request
-   * @param request The request
-   * @return A future that contains the member
-   */
   protected CompletableFuture<Cluster> findCluster(HttpServletRequest request) {
     try {
       var clusterId = UUID.fromString(request.getHeader("Cluster"));
-      return clusterRepository.findById(clusterId).thenApply(opt -> opt.orElse(null));
+      return clusterRepository.findById(clusterId).thenApply(opt ->
+        opt.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cluster not found")));
+    } catch (ResponseStatusException exception) {
+      throw exception;
     } catch (Exception exception) {
-      return CompletableFuture.completedFuture(null);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid or missing Cluster header");
     }
   }
 }
