@@ -12,6 +12,8 @@ permissions:
 
 jobs:
   build:
+    if: github.ref == 'refs/heads/main'
+    needs: test-build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -44,6 +46,7 @@ jobs:
           quiet: true
 
   test-build:
+    needs: checkov
     if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
