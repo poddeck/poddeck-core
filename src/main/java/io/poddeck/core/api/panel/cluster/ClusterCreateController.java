@@ -5,6 +5,7 @@ import io.poddeck.core.api.request.ApiRequestBody;
 import io.poddeck.core.api.security.panel.PanelEndpoint;
 import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.cluster.ClusterRepository;
+import io.poddeck.core.communication.CommunicationConfiguration;
 import io.poddeck.core.member.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
