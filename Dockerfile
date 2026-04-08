@@ -15,6 +15,6 @@ USER 1000
 EXPOSE 8080 10101
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
-  CMD curl -f http://localhost:8080/ || exit 1
+  CMD curl -f http://localhost:8080/v1/ || exit 1
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]

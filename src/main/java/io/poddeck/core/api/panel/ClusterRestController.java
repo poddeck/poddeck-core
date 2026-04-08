@@ -35,7 +35,7 @@ public class ClusterRestController extends PanelRestController {
   protected CompletableFuture<Cluster> findCluster(HttpServletRequest request) {
     try {
       var clusterId = UUID.fromString(request.getHeader("Cluster"));
-      return clusterRepository.findById(clusterId).thenApply(Optional::get);
+      return clusterRepository.findById(clusterId).thenApply(opt -> opt.orElse(null));
     } catch (Exception exception) {
       return CompletableFuture.completedFuture(null);
     }
