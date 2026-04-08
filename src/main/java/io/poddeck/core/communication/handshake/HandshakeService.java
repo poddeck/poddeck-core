@@ -24,19 +24,23 @@ public final class HandshakeService {
     log.info("Handshaking with cluster " + handshakeRequest.getCluster());
     var clusterId = UUID.fromString(handshakeRequest.getCluster());
     var key = handshakeRequest.getKey();
-    clusterRepository.findById(clusterId).thenAccept(clusterOptional -> {
+    try {
+      var clusterOptional = clusterRepository.findById(clusterId).join();
       if (clusterOptional.isEmpty() || !clusterOptional.get().agentKey().equals(key)) {
         log.warning("Handshake rejected for cluster " + clusterId + ": invalid cluster ID or key");
         return;
       }
-      var existingAgentOptional = agentRegistry.findByCluster(clusterId);
-      if (existingAgentOptional.isPresent()) {
-        var existingAgent = existingAgentOptional.get();
-        existingAgent.stream().onCompleted();
-        agentRegistry.unregister(existingAgent);
-      }
-      var agent = Agent.create(clusterId, stream);
-      agentRegistry.register(agent);
-    });
+    } catch (Exception exception) {
+      log.warning("Handshake failed for cluster " + clusterId + ": " + exception.getMessage());
+      return;
+    }
+    var existingAgentOptional = agentRegistry.findByCluster(clusterId);
+    if (existingAgentOptional.isPresent()) {
+      var existingAgent = existingAgentOptional.get();
+      existingAgent.stream().onCompleted();
+      agentRegistry.unregister(existingAgent);
+    }
+    var agent = Agent.create(clusterId, stream);
+    agentRegistry.register(agent);
   }
 }
