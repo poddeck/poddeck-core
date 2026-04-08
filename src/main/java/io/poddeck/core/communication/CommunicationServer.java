@@ -6,8 +6,8 @@ import io.poddeck.common.log.Log;
 import io.poddeck.core.communication.agent.command.AgentCommandRegistry;
 import io.poddeck.core.communication.agent.AgentRegistry;
 import io.poddeck.core.communication.handshake.HandshakeService;
-import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.service.ServiceRepository;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public final class CommunicationServer {
   private final AgentRegistry agentRegistry;
   private final AgentCommandRegistry agentCommandRegistry;
   private final ServiceRepository serviceRepository;
-  private final ClusterRepository clusterRepository;
+  private final EntityManagerFactory entityManagerFactory;
   private Server server;
 
   public void start() {
@@ -28,7 +28,7 @@ public final class CommunicationServer {
       server = ServerBuilder.forPort(configuration.port())
         .addService(TunnelService.create(log, agentRegistry,
           agentCommandRegistry, serviceRepository,
-          HandshakeService.create(log, agentRegistry, clusterRepository)))
+          HandshakeService.create(log, agentRegistry, entityManagerFactory)))
         .build()
         .start();
     } catch (Exception exception) {

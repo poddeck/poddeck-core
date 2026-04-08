@@ -5,9 +5,10 @@ import io.poddeck.common.HandshakeRequest;
 import io.poddeck.common.HandshakeResponse;
 import io.poddeck.common.TunnelMessage;
 import io.poddeck.common.log.Log;
-import io.poddeck.core.cluster.ClusterRepository;
+import io.poddeck.core.cluster.Cluster;
 import io.poddeck.core.communication.agent.Agent;
 import io.poddeck.core.communication.agent.AgentRegistry;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public final class HandshakeService {
   private final Log log;
   private final AgentRegistry agentRegistry;
-  private final ClusterRepository clusterRepository;
+  private final EntityManagerFactory entityManagerFactory;
 
   public void process(
     StreamObserver<TunnelMessage> stream, HandshakeRequest handshakeRequest
@@ -25,8 +26,10 @@ public final class HandshakeService {
     var clusterId = UUID.fromString(handshakeRequest.getCluster());
     var key = handshakeRequest.getKey();
     try {
-      var clusterOptional = clusterRepository.findById(clusterId).join();
-      if (clusterOptional.isEmpty() || !clusterOptional.get().agentKey().equals(key)) {
+      var entityManager = entityManagerFactory.createEntityManager();
+      var cluster = entityManager.find(Cluster.class, clusterId);
+      entityManager.close();
+      if (cluster == null || !cluster.agentKey().equals(key)) {
         log.warning("Handshake rejected for cluster " + clusterId + ": invalid cluster ID or key");
         return;
       }
