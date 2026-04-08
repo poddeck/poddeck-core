@@ -15,17 +15,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Key;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
 public final class ClusterCreateController extends ClusterRestController {
+  private final CommunicationConfiguration communicationConfiguration;
+
   private ClusterCreateController(
     @Qualifier("authenticationKey") Key authenticationKey,
-    MemberRepository memberRepository, ClusterRepository clusterRepository
+    MemberRepository memberRepository, ClusterRepository clusterRepository,
+    CommunicationConfiguration communicationConfiguration
   ) {
     super(authenticationKey, memberRepository, clusterRepository);
+    this.communicationConfiguration = communicationConfiguration;
   }
 
   @PanelEndpoint
@@ -44,8 +50,16 @@ public final class ClusterCreateController extends ClusterRestController {
   private CompletableFuture<Map<String, Object>> createCluster(
     UUID id, String name, String icon
   ) {
-    var cluster = Cluster.create(id, name, icon, System.currentTimeMillis());
+    var agentKey = generateAgentKey();
+    var cluster = Cluster.create(id, name, icon, agentKey, System.currentTimeMillis());
     return clusterRepository().save(cluster)
-      .thenApply(_ -> Map.of("success", true, "cluster", cluster.id()));
+      .thenApply(_ -> Map.of("success", true, "cluster", cluster.id(),
+        "agent_key", agentKey));
+  }
+
+  private String generateAgentKey() {
+    var bytes = new byte[32];
+    new SecureRandom().nextBytes(bytes);
+    return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
   }
 }

@@ -2,8 +2,10 @@ package io.poddeck.core.communication.handshake;
 
 import io.grpc.stub.StreamObserver;
 import io.poddeck.common.HandshakeRequest;
+import io.poddeck.common.HandshakeResponse;
 import io.poddeck.common.TunnelMessage;
 import io.poddeck.common.log.Log;
+import io.poddeck.core.cluster.ClusterRepository;
 import io.poddeck.core.communication.agent.Agent;
 import io.poddeck.core.communication.agent.AgentRegistry;
 import lombok.RequiredArgsConstructor;
@@ -14,20 +16,27 @@ import java.util.UUID;
 public final class HandshakeService {
   private final Log log;
   private final AgentRegistry agentRegistry;
+  private final ClusterRepository clusterRepository;
 
   public void process(
     StreamObserver<TunnelMessage> stream, HandshakeRequest handshakeRequest
   ) {
     log.info("Handshaking with cluster " + handshakeRequest.getCluster());
-    //TODO: CHECK CLUSTER ID & KEY
     var clusterId = UUID.fromString(handshakeRequest.getCluster());
-    var existingAgentOptional = agentRegistry.findByCluster(clusterId);
-    if (existingAgentOptional.isPresent()) {
-      var existingAgent = existingAgentOptional.get();
-      existingAgent.stream().onCompleted();
-      agentRegistry.unregister(existingAgent);
-    }
-    var agent = Agent.create(clusterId, stream);
-    agentRegistry.register(agent);
+    var key = handshakeRequest.getKey();
+    clusterRepository.findById(clusterId).thenAccept(clusterOptional -> {
+      if (clusterOptional.isEmpty() || !clusterOptional.get().agentKey().equals(key)) {
+        log.warning("Handshake rejected for cluster " + clusterId + ": invalid cluster ID or key");
+        return;
+      }
+      var existingAgentOptional = agentRegistry.findByCluster(clusterId);
+      if (existingAgentOptional.isPresent()) {
+        var existingAgent = existingAgentOptional.get();
+        existingAgent.stream().onCompleted();
+        agentRegistry.unregister(existingAgent);
+      }
+      var agent = Agent.create(clusterId, stream);
+      agentRegistry.register(agent);
+    });
   }
 }

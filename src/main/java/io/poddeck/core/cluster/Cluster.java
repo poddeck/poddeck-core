@@ -26,6 +26,8 @@ public final class Cluster {
   private String name;
   @Column(name = "icon", nullable = false)
   private String icon;
+  @Column(name = "agent_key", nullable = false)
+  private String agentKey;
   @Column(name = "created_at", nullable = false)
   private long createdAt;
 

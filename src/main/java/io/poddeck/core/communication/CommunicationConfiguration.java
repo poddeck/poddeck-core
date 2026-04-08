@@ -11,9 +11,11 @@ import org.apache.commons.configuration2.AbstractConfiguration;
 @RequiredArgsConstructor(staticName = "create")
 public final class CommunicationConfiguration implements Configuration {
   private int port;
+  private String host;
 
   @Override
   public void load(AbstractConfiguration file) {
     port = file.getInt("communication.port");
+    host = file.getString("communication.host");
   }
 }

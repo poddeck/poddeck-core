@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-poddeck}
+      POSTGRES_USER: ${DB_USERNAME:-poddeck}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-poddeck}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  core:
+    image: ghcr.io/poddeck/poddeck-core:latest
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-poddeck}
+      DB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+      DB_DATABASE: ${DB_DATABASE:-poddeck}
+      AUTH_KEY: ${AUTH_KEY:?AUTH_KEY is required}
+      REFRESH_KEY: ${REFRESH_KEY:?REFRESH_KEY is required}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost}
+    ports:
+      - "8080:8080"
+      - "10101:10101"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  panel:
+    image: ghcr.io/poddeck/poddeck-panel:latest
+    environment:
+      CORE_URL: http://core:8080
+    ports:
+      - "80:80"
+    depends_on:
+      - core
+
+volumes:
+  pgdata:

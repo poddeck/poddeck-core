@@ -1,0 +1,16 @@
+FROM eclipse-temurin:25-jre
+
+WORKDIR /app
+
+COPY build/libs/core-1.0.0-SNAPSHOT.jar core.jar
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY geo/ /app/geo/
+
+RUN chmod +x /app/docker-entrypoint.sh && \
+    chown -R 1000:1000 /app
+
+USER 1000
+
+EXPOSE 8080 10101
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
