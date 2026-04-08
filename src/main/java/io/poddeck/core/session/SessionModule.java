@@ -5,12 +5,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.File;
+import java.util.Optional;
 
 @Configuration
 public class SessionModule {
   @Bean
-  DatabaseReader geoDatabaseReader() throws Exception {
+  Optional<DatabaseReader> geoDatabaseReader() {
     var database = new File("geo/GeoLite2-City.mmdb");
-    return new DatabaseReader.Builder(database).build();
+    if (!database.exists()) {
+      return Optional.empty();
+    }
+    try {
+      return Optional.of(new DatabaseReader.Builder(database).build());
+    } catch (Exception exception) {
+      return Optional.empty();
+    }
   }
 }

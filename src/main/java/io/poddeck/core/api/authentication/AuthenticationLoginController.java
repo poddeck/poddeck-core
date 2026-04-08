@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.InetAddress;
 import java.security.Key;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -29,13 +30,13 @@ public final class AuthenticationLoginController extends PanelRestController {
   private final Authentication authentication;
   private final MultiFactorAuthFactory multiFactorAuthFactory;
   private final SessionRepository sessionRepository;
-  private final DatabaseReader geoDatabaseReader;
+  private final Optional<DatabaseReader> geoDatabaseReader;
 
   private AuthenticationLoginController(
     @Qualifier("authenticationKey") Key authenticationKey,
     MemberRepository memberRepository, Authentication authentication,
     MultiFactorAuthFactory multiFactorAuthFactory,
-    SessionRepository sessionRepository, DatabaseReader geoDatabaseReader
+    SessionRepository sessionRepository, Optional<DatabaseReader> geoDatabaseReader
   ) {
     super(authenticationKey, memberRepository);
     this.authentication = authentication;
@@ -123,11 +124,13 @@ public final class AuthenticationLoginController extends PanelRestController {
     var city = "";
     var platform = "";
     var ipAddress = request.getHeader("X-Real-IP");
-    try {
-      var location = geoDatabaseReader.city(InetAddress.getByName(ipAddress));
-      country = location.country().name();
-      city = location.city().name();
-    } catch (Exception ignored) {
+    if (geoDatabaseReader.isPresent()) {
+      try {
+        var location = geoDatabaseReader.get().city(InetAddress.getByName(ipAddress));
+        country = location.country().name();
+        city = location.city().name();
+      } catch (Exception ignored) {
+      }
     }
     try {
       platform = UserAgent.create(request.getHeader("User-Agent"))
