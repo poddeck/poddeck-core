@@ -28,7 +28,7 @@ public final class Notification {
   private String title;
   @Column(name = "description", nullable = false)
   private String description;
-  @ElementCollection
+  @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(
     name = "notification_parameters",
     joinColumns = @JoinColumn(name = "id")
