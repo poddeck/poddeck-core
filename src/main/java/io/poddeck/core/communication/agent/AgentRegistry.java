@@ -1,6 +1,5 @@
 package io.poddeck.core.communication.agent;
 
-import com.google.common.collect.Lists;
 import io.grpc.stub.StreamObserver;
 import io.poddeck.common.TunnelMessage;
 import io.poddeck.core.cluster.Cluster;
@@ -11,11 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Component
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class AgentRegistry {
-  private final List<Agent> agents = Lists.newArrayList();
+  private final List<Agent> agents = new CopyOnWriteArrayList<>();
 
   /**
    * Registers a new agent

@@ -37,8 +37,12 @@ public class TunnelService extends TunnelServiceGrpc.TunnelServiceImplBase {
           }
           return;
         }
-        agentRegistry.findByStream(stream)
-          .ifPresent(agent -> processMessage(agent, message));
+        var agentOptional = agentRegistry.findByStream(stream);
+        if (agentOptional.isEmpty()) {
+          log.warning("Received message from unregistered stream (type: " + payload.getTypeUrl() + ")");
+          return;
+        }
+        processMessage(agentOptional.get(), message);
       }
 
       private void processMessage(Agent agent, TunnelMessage message) {
