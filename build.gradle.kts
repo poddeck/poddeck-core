@@ -55,7 +55,7 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.0.5")
   implementation("org.springframework:spring-core:7.0.6")
-  implementation("org.springframework.data:spring-data-jpa:4.0.4")
+  implementation("org.springframework.data:spring-data-jpa:4.0.5")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.5")
   implementation("com.h2database:h2:2.4.240")
 
