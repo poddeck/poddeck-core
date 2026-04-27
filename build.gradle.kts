@@ -4,7 +4,7 @@ import java.util.zip.GZIPInputStream
 
 plugins {
   id("java")
-  id("org.springframework.boot") version "4.0.5"
+  id("org.springframework.boot") version "4.0.6"
   id("io.freefair.lombok") version "9.2.0"
 }
 
@@ -53,10 +53,8 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java:4.34.1")
   implementation("com.google.protobuf:protobuf-java-util:4.34.1")
 
-  implementation("org.springframework.boot:spring-boot-starter-web:4.0.5")
-  implementation("org.springframework:spring-core:7.0.6")
-  implementation("org.springframework.data:spring-data-jpa:4.0.4")
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.5")
+  implementation("org.springframework.boot:spring-boot-starter-web:4.0.6")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.6")
   implementation("com.h2database:h2:2.4.240")
 
   implementation("de.mkammerer:argon2-jvm:2.12")
