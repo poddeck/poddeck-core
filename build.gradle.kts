@@ -45,9 +45,9 @@ dependencies {
   implementation("org.hibernate.orm:hibernate-core:7.3.1.Final")
   implementation("org.reflections:reflections:0.10.2")
 
-  implementation("io.grpc:grpc-stub:1.80.0")
-  implementation("io.grpc:grpc-protobuf:1.80.0")
-  implementation("io.grpc:grpc-netty:1.80.0")
+  implementation("io.grpc:grpc-stub:1.81.0")
+  implementation("io.grpc:grpc-protobuf:1.81.0")
+  implementation("io.grpc:grpc-netty:1.81.0")
 
   implementation(platform("io.netty:netty-bom:4.2.12.Final"))
   implementation("com.google.protobuf:protobuf-java:4.34.1")
