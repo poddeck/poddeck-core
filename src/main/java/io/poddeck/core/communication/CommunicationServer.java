@@ -24,6 +24,7 @@ public final class CommunicationServer {
   public void start() {
     try {
       server = ServerBuilder.forPort(configuration.port())
+        .maxInboundMessageSize(16 * 1024 * 1024)
         .addService(TunnelService.create(log, agentRegistry,
           agentCommandRegistry, serviceRepository,
           HandshakeService.create(log, agentRegistry)))

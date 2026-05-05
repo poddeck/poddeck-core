@@ -47,11 +47,24 @@ public final class Translation {
    * @param args The arguments for the translation
    * @return A future that contains the translated locale
    */
+  private static final String DEFAULT_LANGUAGE = "en";
+
   public String translate(String language, String key, String... args) {
-    if (!locales.hasLanguage(language)) {
-      return format(key, args);
+    var resolved = resolveLanguage(language);
+    return format(locales.findLocale(resolved).get().findText(key), args);
+  }
+
+  private String resolveLanguage(String language) {
+    if (language != null && locales.hasLanguage(language)) {
+      return language;
     }
-    return format(locales.findLocale(language).get().findText(key), args);
+    if (language != null) {
+      var base = language.split("[_-]", 2)[0].toLowerCase();
+      if (locales.hasLanguage(base)) {
+        return base;
+      }
+    }
+    return DEFAULT_LANGUAGE;
   }
 
   /**
