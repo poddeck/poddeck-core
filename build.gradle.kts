@@ -42,7 +42,7 @@ dependencies {
   implementation("commons-beanutils:commons-beanutils:1.11.0")
 
   implementation("org.postgresql:postgresql:42.7.11")
-  implementation("org.hibernate.orm:hibernate-core:7.3.3.Final")
+  implementation("org.hibernate.orm:hibernate-core:7.3.4.Final")
   implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.grpc:grpc-stub:1.81.0")
