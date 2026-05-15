@@ -1,12 +1,11 @@
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:25-jre-alpine
 
 WORKDIR /app
 
 COPY build/libs/core-*.jar core.jar
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl && \
-    rm -rf /var/lib/apt/lists/* && \
+RUN apk add --no-cache curl && \
     chmod +x /app/docker-entrypoint.sh && \
     chown -R 1000:1000 /app
 
