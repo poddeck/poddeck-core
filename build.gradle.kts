@@ -25,6 +25,14 @@ repositories {
 }
 
 dependencies {
+  // Override Spring Boot 4.0.6's managed Tomcat 11.0.21 to patch
+  // CVE-2026-41293/-43512/-43515/-41284/-42498/-43513 (fixed in 11.0.22)
+  constraints {
+    implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.22")
+    implementation("org.apache.tomcat.embed:tomcat-embed-el:11.0.22")
+    implementation("org.apache.tomcat.embed:tomcat-embed-websocket:11.0.22")
+  }
+
   testImplementation(platform("org.junit:junit-bom:6.0.3"))
   testImplementation("org.junit.jupiter:junit-jupiter:6.0.3")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
