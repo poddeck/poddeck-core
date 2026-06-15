@@ -33,8 +33,8 @@ dependencies {
     implementation("org.apache.tomcat.embed:tomcat-embed-websocket:11.0.22")
   }
 
-  testImplementation(platform("org.junit:junit-bom:6.0.3"))
-  testImplementation("org.junit.jupiter:junit-jupiter:6.0.3")
+  testImplementation(platform("org.junit:junit-bom:6.1.0"))
+  testImplementation("org.junit.jupiter:junit-jupiter:6.1.0")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.0")
 
   implementation("com.google.guava:guava:33.6.0-jre")
