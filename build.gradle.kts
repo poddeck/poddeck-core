@@ -62,8 +62,8 @@ dependencies {
   implementation("io.grpc:grpc-netty:1.82.0")
 
   implementation(platform("io.netty:netty-bom:4.2.15.Final"))
-  implementation("com.google.protobuf:protobuf-java:4.35.0")
-  implementation("com.google.protobuf:protobuf-java-util:4.35.0")
+  implementation("com.google.protobuf:protobuf-java:4.35.1")
+  implementation("com.google.protobuf:protobuf-java-util:4.35.1")
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.1.0")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.0")
