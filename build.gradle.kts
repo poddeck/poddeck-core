@@ -54,7 +54,7 @@ dependencies {
   implementation("commons-beanutils:commons-beanutils:1.11.0")
 
   implementation("org.postgresql:postgresql:42.7.12")
-  implementation("org.hibernate.orm:hibernate-core:7.4.4.Final")
+  implementation("org.hibernate.orm:hibernate-core:7.4.5.Final")
   implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.grpc:grpc-stub:1.82.1")
