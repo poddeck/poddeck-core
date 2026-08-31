@@ -28,9 +28,9 @@ dependencies {
   // Override Spring Boot 4.0.6's managed Tomcat 11.0.21 to patch
   // CVE-2026-41293/-43512/-43515/-41284/-42498/-43513 (fixed in 11.0.22)
   constraints {
-    implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.24")
-    implementation("org.apache.tomcat.embed:tomcat-embed-el:11.0.24")
-    implementation("org.apache.tomcat.embed:tomcat-embed-websocket:11.0.24")
+    implementation("org.apache.tomcat.embed:tomcat-embed-core:11.0.25")
+    implementation("org.apache.tomcat.embed:tomcat-embed-el:11.0.25")
+    implementation("org.apache.tomcat.embed:tomcat-embed-websocket:11.0.25")
 
     // Override Spring Boot 4.1.0's managed jackson-databind 2.21.3 to patch
     // CVE-2026-54512/-54513 (PolymorphicTypeValidator bypasses, fixed in 2.21.4).
