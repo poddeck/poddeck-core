@@ -67,7 +67,7 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.1.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.1")
-  implementation("com.h2database:h2:2.4.240")
+  implementation("com.h2database:h2:2.5.250")
 
   implementation("de.mkammerer:argon2-jvm:2.12")
 
