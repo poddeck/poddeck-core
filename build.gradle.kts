@@ -5,7 +5,7 @@ import java.util.zip.GZIPInputStream
 plugins {
   id("java")
   id("org.springframework.boot") version "4.1.1"
-  id("io.freefair.lombok") version "9.5.0"
+  id("io.freefair.lombok") version "9.7.0"
 }
 
 group = "io.poddeck"
