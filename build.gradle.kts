@@ -5,7 +5,7 @@ import java.util.zip.GZIPInputStream
 plugins {
   id("java")
   id("org.springframework.boot") version "4.1.1"
-  id("io.freefair.lombok") version "9.7.0"
+  id("io.freefair.lombok") version "9.8.0"
 }
 
 group = "io.poddeck"
@@ -35,13 +35,18 @@ dependencies {
     // Override Spring Boot 4.1.0's managed jackson-databind 2.21.3 to patch
     // CVE-2026-54512/-54513 (PolymorphicTypeValidator bypasses, fixed in 2.21.4).
     implementation("com.fasterxml.jackson.core:jackson-databind:2.22.3")
+
+    // Override Spring Boot 4.1.1's managed Jackson 3.1.5 to patch
+    // CVE-2026-89407/-89425/-68497/-91776/-91777 (fixed in 3.1.7).
+    implementation("tools.jackson.core:jackson-core:3.1.8")
+    implementation("tools.jackson.core:jackson-databind:3.1.8")
   }
 
   testImplementation(platform("org.junit:junit-bom:6.1.3"))
   testImplementation("org.junit.jupiter:junit-jupiter:6.1.3")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.3")
 
-  implementation("com.google.guava:guava:33.7.1-jre")
+  implementation("com.google.guava:guava:33.7.2-jre")
 
   implementation("org.projectlombok:lombok:1.18.48")
   annotationProcessor("org.projectlombok:lombok:1.18.48")
@@ -54,7 +59,7 @@ dependencies {
   implementation("commons-beanutils:commons-beanutils:1.11.0")
 
   implementation("org.postgresql:postgresql:42.7.13")
-  implementation("org.hibernate.orm:hibernate-core:7.4.10.Final")
+  implementation("org.hibernate.orm:hibernate-core:7.4.11.Final")
   implementation("org.reflections:reflections:0.10.2")
 
   implementation("io.grpc:grpc-stub:1.84.0")
@@ -67,7 +72,7 @@ dependencies {
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.1.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.1")
-  implementation("com.h2database:h2:2.5.250")
+  implementation("com.h2database:h2:2.5.252")
 
   implementation("de.mkammerer:argon2-jvm:2.12")
 
@@ -83,7 +88,7 @@ dependencies {
 
   implementation("io.poddeck:common:1.0.0-SNAPSHOT")
 
-  implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260924.1")
+  implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260924.2")
 }
 
 tasks.test {
