@@ -34,7 +34,7 @@ dependencies {
 
     // Override Spring Boot 4.1.0's managed jackson-databind 2.21.3 to patch
     // CVE-2026-54512/-54513 (PolymorphicTypeValidator bypasses, fixed in 2.21.4).
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.22.3")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.22.4")
 
     // Override Spring Boot 4.1.1's managed Jackson 3.1.5 to patch
     // CVE-2026-89407/-89425/-68497/-91776/-91777 (fixed in 3.1.7).
