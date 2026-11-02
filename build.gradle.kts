@@ -88,7 +88,7 @@ dependencies {
 
   implementation("io.poddeck:common:1.0.0-SNAPSHOT")
 
-  implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20260924.2")
+  implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20261011.1")
 }
 
 tasks.test {
