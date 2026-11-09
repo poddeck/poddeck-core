@@ -39,7 +39,7 @@ dependencies {
     // Override Spring Boot 4.1.1's managed Jackson 3.1.5 to patch
     // CVE-2026-89407/-89425/-68497/-91776/-91777 (fixed in 3.1.7).
     implementation("tools.jackson.core:jackson-core:3.1.8")
-    implementation("tools.jackson.core:jackson-databind:3.1.8")
+    implementation("tools.jackson.core:jackson-databind:3.2.4")
   }
 
   testImplementation(platform("org.junit:junit-bom:6.1.3"))
