@@ -71,7 +71,7 @@ dependencies {
   implementation("com.google.protobuf:protobuf-java-util:4.36.2")
 
   implementation("org.springframework.boot:spring-boot-starter-web:4.1.1")
-  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.1")
+  implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.1.2")
   implementation("com.h2database:h2:2.5.252")
 
   implementation("de.mkammerer:argon2-jvm:2.12")
