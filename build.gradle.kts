@@ -66,7 +66,7 @@ dependencies {
   implementation("io.grpc:grpc-protobuf:1.85.1")
   implementation("io.grpc:grpc-netty:1.85.1")
 
-  implementation(platform("io.netty:netty-bom:4.2.18.Final"))
+  implementation(platform("io.netty:netty-bom:4.2.20.Final"))
   implementation("com.google.protobuf:protobuf-java:4.36.2")
   implementation("com.google.protobuf:protobuf-java-util:4.36.2")
 
